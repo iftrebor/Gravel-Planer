@@ -471,7 +471,6 @@ function switchTab(tabId){
     b.setAttribute('aria-selected', String(active));
   });
   localStorage.setItem('gravel_plan_v62_tab', tabId);
-  window.scrollTo({top:0, behavior:'smooth'});
 }
 document.querySelectorAll('.tabbtn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
 
