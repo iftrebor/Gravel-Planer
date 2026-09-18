@@ -68,6 +68,9 @@ section h2{margin:0 0 var(--space-3);font-size:19px}
 .row{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--space-2);align-items:start}
 .field{grid-column:span 6;background:rgba(0,0,0,.04);border:1px solid var(--border);padding:var(--space-2);border-radius:14px;min-width:0}
 .field.full{grid-column:span 12}
+.field-invalid input,.field-invalid select{border-color:#ef6461;box-shadow:0 0 0 3px rgba(239,100,97,.16)}
+.field-error{display:none;color:#ef8b88;font-size:12px;font-weight:700;margin-top:5px}
+.field-invalid .field-error{display:block}
 .field label{display:block;color:var(--muted);font-size:var(--text-sm);margin-bottom:6px}
 .field input,.field select{width:100%;padding:13px 12px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--ink);font-size:var(--text-input);min-height:48px}
 .help{margin-top:5px}
@@ -209,6 +212,7 @@ details>summary{cursor:pointer;font-weight:700}
           <button class="btn ghost" id="resetBtn">↺ Zurücksetzen</button>
           <button class="btn primary" id="calcBtn">🧮 Plan berechnen</button>
         </div>
+        <div id="validationMessage" class="field-error" role="alert" aria-live="polite"></div>
       </div>
 
       <div class="right">
@@ -243,6 +247,7 @@ details>summary{cursor:pointer;font-weight:700}
         <button class="btn ghost" id="resetBtn_m">↺ Zurücksetzen</button>
         <button class="btn primary" id="calcBtn_m">🧮 Plan berechnen</button>
       </div>
+      <div id="validationMessage_m" class="field-error" role="alert" aria-live="polite"></div>
 
       <div class="plan-mobile-top">
         <div class="card">
@@ -334,10 +339,10 @@ details>summary{cursor:pointer;font-weight:700}
   <section class="panel" id="tab-food">
     <h2>Verpflegung</h2>
     <div class="cards">
-      <div class="card"><h3>Gel-Konzentrat gesamt 🧴</h3><ul id="gelMixList" class="small"></ul></div>
-      <div class="card"><h3>Dosierung pro Trinkflasche 🧪</h3><ul id="recipeList" class="small"></ul></div>
       <div class="card"><h3>Ziele pro Stunde 🎯</h3><ul id="targets" class="small"></ul></div>
       <div class="card"><h3>Gesamtbedarf (Tour) 📊</h3><ul id="totals" class="small"></ul></div>
+      <div class="card"><h3>Dosierung pro Trinkflasche 🧪</h3><ul id="recipeList" class="small"></ul></div>
+      <div class="card"><h3>Gel-Konzentrat gesamt 🧴</h3><ul id="gelMixList" class="small"></ul></div>
       <div class="card"><h3>Mitnehmen & Transport 🎒</h3><ul id="carry" class="small"></ul></div>
     </div>
     <details open><summary>Snack‑Strategie pro Stunde 🍌</summary><ul id="snackStrategy" class="small"></ul></details>
@@ -550,12 +555,71 @@ function readFormState(){
   return state;
 }
 
+const validationFields = {
+  distance: ['Distanz', 10, 1000, 'km'],
+  speed: ['Ø-Geschwindigkeit', 10, 40, 'km/h'],
+  days: ['Bikepacking-Tage', 1, 14, ''],
+  mlPerHour: ['Trinkmenge', 300, 1200, 'ml/h'],
+  carbPerHour: ['Kohlenhydrate', 40, 110, 'g/h'],
+  saltPerHour: ['Salz-Ziel', 200, 1500, 'mg/h'],
+  bottleMl: ['Flaschengröße', 500, 1000, 'ml']
+};
+
+function updateFieldValidation(key, message){
+  const fieldIds = inputMap[key] || [];
+  fieldIds.forEach(inputId => {
+    const input = document.getElementById(inputId);
+    if(!input) return;
+    const field = input.closest('.field');
+    if(!field) return;
+    let error = field.querySelector('.field-error');
+    if(!error){
+      error = document.createElement('div');
+      error.className = 'field-error';
+      field.appendChild(error);
+    }
+    const errorId = inputId + '_error';
+    error.id = errorId;
+    error.textContent = message;
+    field.classList.toggle('field-invalid', Boolean(message));
+    input.setAttribute('aria-invalid', String(Boolean(message)));
+    if(message) input.setAttribute('aria-describedby', errorId);
+    else input.removeAttribute('aria-describedby');
+  });
+}
+
+function validateInputs(){
+  const errors = [];
+  Object.entries(validationFields).forEach(([key, [label, min, max, unit]]) => {
+    const raw = getVal(key);
+    const value = Number(raw);
+    let message = '';
+    if(String(raw).trim() === '' || !Number.isFinite(value)){
+      message = label + ' muss eine Zahl enthalten.';
+    }else if(value < min || value > max){
+      message = label + ' muss zwischen ' + min + ' und ' + max + (unit ? ' ' + unit : '') + ' liegen.';
+    }
+    updateFieldValidation(key, message);
+    if(message) errors.push(message);
+  });
+  ['validationMessage', 'validationMessage_m'].forEach(id => {
+    const message = document.getElementById(id);
+    if(message){
+      message.textContent = errors.length ? 'Bitte Eingaben prüfen: ' + errors.join(' ') : '';
+      message.style.display = errors.length ? 'block' : 'none';
+    }
+  });
+  return errors.length === 0;
+}
+
 function compute(){
+  if(!validateInputs()) return;
   const state = readFormState();
   const ratio = state.ratio;
   const calculation = calculateTour({
     distance: state.distance,
     speed: state.speed,
+    days: state.days,
     hotMode: state.hotMode,
     mlPerHour: state.mlPerHour,
     carbPerHour: state.carbPerHour,
