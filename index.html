@@ -605,9 +605,9 @@ function compute(){
     'Pulver und Salz mit dem Wasser unter Erwärmen gründlich auflösen und anschließend abkühlen lassen',
     'Das Konzentrat auf die zwei 800-ml-Flaschen und die zwei Squeeze-Flaschen verteilen',
     calculation.gelPerBottleMassG.toFixed(1) + ' g Gel-Konzentrat je 800-ml-Trinkflasche',
-    calculation.gelPerSqueezeMl.toFixed(1) + ' ml Gel je Squeeze-Flasche (Dichte-Näherung: 1,30 g/ml; 2 × 250 ml gleichmäßig auffüllen)',
-    calculation.extraGelVesselMl > 0
-      ? calculation.extraGelVesselMl + ' ml bleiben übrig: in ein weiteres Gefäß füllen'
+    calculation.gelPerSqueezeMassG.toFixed(1) + ' g Gel je Squeeze-Flasche (2 × 250 ml gleichmäßig befüllen)',
+    calculation.extraGelVesselMassG > 0
+      ? calculation.extraGelVesselMassG.toFixed(1) + ' g bleiben übrig: in ein weiteres Gefäß füllen'
       : 'Die zwei 250-ml-Squeeze-Flaschen reichen für das Rest-Konzentrat',
     'Für die Tour reichen damit ca. ' + Math.max(1, Math.ceil(mixedDrinkBottles)) + ' gemischte Trinkflaschen'
   ].map(x => '<li>'+x+'</li>').join('');
@@ -680,7 +680,7 @@ function compute(){
     'Flaschenmix: ' + (waterSecond ? '1× Drink + 1× Wasser' : '2× gemischter Drink'),
     'Gel-Konzentrat gesamt: ' + totalCarbDrink + ' g KH und ' + totalSalt.toFixed(1) + ' g Salz',
     'Dosierung: ' + calculation.gelPerBottleMassG.toFixed(1) + ' g Gel je 800-ml-Trinkflasche',
-    'Squeeze-Flaschen: ' + calculation.gelPerSqueezeMl.toFixed(1) + ' ml je Flasche',
+    'Squeeze-Flaschen: ' + calculation.gelPerSqueezeMassG.toFixed(1) + ' g je Flasche',
     'Drink je Stunde: ca. ' + drinkMlPerH + ' ml',
     'Wasser je Stunde: ca. ' + waterMlPerH + ' ml',
     'Refills: ' + (refillsNeeded > 0 ? refillsNeeded + ' einplanen' : 'nicht nötig'),
