@@ -397,7 +397,7 @@ details>summary{cursor:pointer;font-weight:700}
     <div class="kpis">
       <div class="kpi"><div class="k">Distanz</div><div class="v" id="sumDistance">–</div><div class="s">km</div></div>
       <div class="kpi"><div class="k">Dauer</div><div class="v" id="sumDuration">–</div><div class="s">Stunden</div></div>
-      <div class="kpi"><div class="k">Trinken / h</div><div class="v" id="sumDrinkPerH">–</div><div class="s">inkl. Drink/Wasser</div></div>
+      <div class="kpi"><div class="k">Gemischter Drink / h</div><div class="v" id="sumDrinkPerH">–</div><div class="s">aus den beiden Flaschen</div></div>
       <div class="kpi"><div class="k">KH / h</div><div class="v" id="sumCarbPerH">–</div><div class="s">Ziel pro Stunde</div></div>
     </div>
     <div class="cards" style="margin-top:12px">
@@ -424,7 +424,7 @@ const THEME_KEY = 'gravel_plan_theme_v62';
 const toolData = {
   tools:['Multitool (mit Kettennieter)','Minipumpe oder CO₂ + 2 Kartuschen + Adapter','2 Reifenheber','Flickzeug oder Tubeless‑Plugs','1–2 Ersatzschläuche (passendes Ventil)','Kettenschloss / Kettenheber','Kettenspray','2 Schlauchadapter','2 Ersatzschläuche (passendes Ventil)'],
   safety:['Frontlicht (geladen)','Rücklicht (geladen)','Reflektor‑Band / Clip','Erste‑Hilfe‑Set (Pflaster, Blasenpflaster, Kompresse)','Rettungsdecke'],
-  food:['Trinkflaschen','Gel-/Konzentratflasche zum Dosieren','Aroma / Sirup für das Gel','Reserve‑Riegel (~300 kcal)','Kleiner Müllbeutel','Wasserfilter'],
+  food:['Trinkflaschen mit Gel-Mischung','Gel-/Konzentratflasche zum Dosieren','Aroma / Sirup für das Gel','Reserve‑Riegel (~300 kcal)','Kleiner Müllbeutel'],
   nav:['Handy + Offline‑Karten','Powerbank + Kabel','EC‑Karte / Bargeld','Ausweis + Krankenkassenkarte'],
   clothes:['Regenjacke / Windweste','Armlinge / Beinlinge je nach Wetter','Radhandschuhe','Buff / Mütze','Sonnenbrille','Sonnencreme','Kettenschutz‑Wipe / Feuchttuch'],
   hygiene:['Klopapier','Taschentücher']
@@ -558,15 +558,15 @@ function buildRefillStrategy(totalMl, bottleMl, duration){
     items.push('Für diese Tour ist voraussichtlich kein Nachfüllen nötig.');
   } else {
     items.push('Es werden voraussichtlich ' + refillsNeeded + ' zusätzliche Flaschenfüllungen benötigt.');
-    items.push('Mit 2× gemischtem Drink starten und unterwegs Wasser nachfüllen.');
+    items.push('Mit 2× gemischtem Drink starten und unterwegs an einem Nachfüllpunkt auffüllen.');
   }
-  if(duration >= 6) items.push('Bei langer Tour Stopps oder verlässliche Wasserquelle vorab planen.');
+  if(duration >= 6) items.push('Bei langer Tour Stopps und Nachfüllmöglichkeiten vorab planen.');
   return items;
 }
 function buildPackLogic(duration, hotMode, totalMl, refillsNeeded){
   const items = [duration >= 6 ? 'Pflicht: Energie und Hydration bewusst vorplanen.' : 'Pflicht: Basis-Tools, Licht und Trinksystem prüfen.'];
   items.push(hotMode ? 'Empfohlen: höhere Trink- und Natriumreserve einpacken.' : 'Empfohlen: Standard-Hydration genügt meist.');
-  items.push(refillsNeeded > 0 ? 'Empfohlen: Nachfüllpunkt oder Wasserfilter einplanen.' : 'Optional: Wasserfilter nur als zusätzliche Reserve.');
+  items.push(refillsNeeded > 0 ? 'Empfohlen: Nachfüllpunkt für weitere gemischte Flaschen einplanen.' : 'Kein zusätzlicher Nachfüllpunkt erforderlich.');
   items.push(totalMl > 4000 ? 'Empfohlen: Snacks und Gel-Konzentrat klar vorbereiten.' : 'Optional: kleine Snack-Auswahl reicht meist aus.');
   return items;
 }
@@ -667,13 +667,11 @@ function compute(){
   const saltPerHour = calculation.saltPerHour;
   const bottleMl = state.bottleMl;
   const drinkMlPerH = calculation.drinkMlPerHour;
-  const waterMlPerH = calculation.waterMlPerHour;
   const carbPerBottle = calculation.carbPerBottle;
   const mgNaPerBottle = calculation.sodiumPerBottle;
   const saltPerBottle = calculation.saltPerBottle;
   const totalMl = calculation.totalMl;
   const totalDrinkMl = calculation.totalDrinkMl;
-  const totalWaterMl = calculation.totalWaterMl;
   const totalBottles = calculation.totalBottleFills;
   const totalCarbDrink = calculation.totalCarbs;
   const totalNa = calculation.totalSodium;
@@ -718,7 +716,7 @@ function compute(){
   ].map(x => '<li>'+x+'</li>').join('');
 
   document.getElementById('targets').innerHTML = [
-    '<b>Trinken:</b> ' + mlPerHour + ' ml/h <span class="muted">(Drink ~' + drinkMlPerH + ' · Wasser ~' + waterMlPerH + ')</span>',
+    '<b>Trinken:</b> ' + mlPerHour + ' ml/h gemischter Drink',
     '<b>KH:</b> ' + carbPerHour + ' g/h · <b>Salz:</b> ' + saltPerHour + ' mg/h (~' + Math.round(calculation.naPerHour) + ' mg Natrium/h)',
     state.hotMode ? 'Hitze-Modus aktiv: Berechnung mindestens mit 800 ml/h und 850 mg Salz/h – KH bleiben unverändert' : 'Hitze-Modus aus: Berechnung folgt exakt deinen Eingabewerten',
     'Flaschen: 2× Gel-Mischung'
@@ -726,7 +724,7 @@ function compute(){
 
   document.getElementById('totals').innerHTML = [
     '<b>Dauer:</b> ' + (Math.round(duration*4)/4).toFixed(2) + ' h',
-    '<b>Gesamttrinkmenge:</b> ' + totalMl + ' ml (Drink ' + totalDrinkMl + ' / Wasser ' + totalWaterMl + ')',
+    '<b>Gesamttrinkmenge:</b> ' + totalMl + ' ml gemischter Drink',
     '<b>Bikepacking:</b> ' + days + ' Tag' + (days === 1 ? '' : 'e') + ' · pro Tag ca. ' + calculation.dailyDistance.toFixed(1) + ' km, ' + calculation.dailyDuration.toFixed(2) + ' h, ' + calculation.dailyTotalMl + ' ml, ' + calculation.dailyTotalCarbs + ' g KH und ' + calculation.dailyTotalSalt.toFixed(2) + ' g Salz',
     '<b>Flaschen gesamt:</b> ' + totalBottles + ' × ' + bottleMl + ' ml',
     '<b>KH über Drink (Ziel):</b> ~' + totalCarbDrink + ' g',
@@ -757,14 +755,14 @@ function compute(){
     const tr = el('tr');
     tr.appendChild(el('td','', h+'–'+(h+1)));
     const tdDrink = el('td');
-    tdDrink.textContent = mlPerHour + ' ml (Drink ~' + drinkMlPerH + ' · Wasser ~' + waterMlPerH + ')';
+    tdDrink.textContent = mlPerHour + ' ml gemischter Drink';
     tr.appendChild(tdDrink);
     const eat = [];
     if(h===0) eat.push('nichts essen / sachte einrollen');
     if(h===1 && bananaLeft>0){ eat.push('½ Banane'); bananaLeft--; }
     if(h>=1){
       if(snLeft>0){ eat.push('~1/5 Snickers'); snLeft--; }
-      if(h >= Math.ceil(hours*0.66)) eat.push('eher schnelle KH und Drink bevorzugen');
+      if(h >= Math.ceil(hours*0.66)) eat.push('eher schnelle KH und gemischten Drink bevorzugen');
     }
     const tdEat = el('td');
     tdEat.innerHTML = eat.length ? '<ul class="small">'+eat.map(x => '<li>'+x+'</li>').join('')+'</ul>' : '<span class="muted">optional</span>';
@@ -783,11 +781,10 @@ function compute(){
     'Bikepacking: ' + days + ' Tag' + (days === 1 ? '' : 'e') + ' · pro Tag ca. ' + calculation.dailyDistance.toFixed(1) + ' km, ' + calculation.dailyTotalCarbs + ' g KH und ' + calculation.dailyTotalMl + ' ml',
     'Dosierung: ' + calculation.gelPerBottleMassG.toFixed(1) + ' g Gel je 800-ml-Trinkflasche',
     'Squeeze-Flaschen: ' + calculation.gelPerSqueezeMassG.toFixed(1) + ' g je Flasche',
-    'Drink je Stunde: ca. ' + drinkMlPerH + ' ml',
-    'Wasser je Stunde: ca. ' + waterMlPerH + ' ml',
+    'Gemischter Drink je Stunde: ca. ' + drinkMlPerH + ' ml',
     'Refills: ' + (refillsNeeded > 0 ? refillsNeeded + ' einplanen' : 'nicht nötig'),
     'Snacks: ' + snickers + '× Snickers und ' + bananas + '× Banane',
-    state.hotMode ? 'Hitze-Modus aktiv: mehr Wasser und Natrium berücksichtigt, KH bleiben konstant' : 'Hitze-Modus aus'
+    state.hotMode ? 'Hitze-Modus aktiv: höheres Trink- und Salz-Ziel berücksichtigt, KH bleiben konstant' : 'Hitze-Modus aus'
   ];
   document.getElementById('summaryList').innerHTML = summary.map(x => '<li>'+x+'</li>').join('');
   document.getElementById('planSummaryList').innerHTML = summary.map(x => '<li>'+x+'</li>').join('');

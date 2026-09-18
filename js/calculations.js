@@ -39,7 +39,6 @@ export function normalizeInput(input = {}) {
     bottleMl: clampNumber(input.bottleMl, ...LIMITS.bottleMl, 800),
     days: clampNumber(input.days, ...LIMITS.days, 1),
     hotMode: Boolean(input.hotMode),
-    waterSecond: Boolean(input.waterSecond),
     ratio: parseRatio(input.ratio)
   };
 }
@@ -52,13 +51,11 @@ export function calculateTour(rawInput = {}) {
   const duration = input.distance / input.speed;
   const drinkShare = 1;
   const drinkMlPerHour = Math.round(mlPerHour * drinkShare);
-  const waterMlPerHour = Math.max(0, mlPerHour - drinkMlPerHour);
   const drinkBottlesPerHour = input.bottleMl > 0 ? drinkMlPerHour / input.bottleMl : 0;
   const carbPerBottle = drinkBottlesPerHour > 0 ? input.carbPerHour / drinkBottlesPerHour : 0;
   const sodiumPerBottle = drinkBottlesPerHour > 0 ? naPerHour / drinkBottlesPerHour : 0;
   const totalMl = Math.round(mlPerHour * duration);
   const totalDrinkMl = Math.round(drinkMlPerHour * duration);
-  const totalWaterMl = totalMl - totalDrinkMl;
   const totalBottleFills = Math.ceil(totalMl / input.bottleMl);
   const refillsNeeded = Math.max(0, Math.ceil((totalMl - input.bottleMl * 2) / input.bottleMl));
   const totalCarbs = Math.round(input.carbPerHour * duration);
@@ -89,13 +86,11 @@ export function calculateTour(rawInput = {}) {
     saltPerHour,
     naPerHour,
     drinkMlPerHour,
-    waterMlPerHour,
     carbPerBottle,
     sodiumPerBottle,
     saltPerBottle: sodiumPerBottle / SODIUM_PER_MG_SALT,
     totalMl,
     totalDrinkMl,
-    totalWaterMl,
     totalBottleFills,
     refillsNeeded,
     totalCarbs,
