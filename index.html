@@ -372,7 +372,6 @@ details>summary{cursor:pointer;font-weight:700}
       <div class="card"><h3>Mitnehmen & Transport 🎒</h3><ul id="carry" class="small"></ul></div>
     </div>
     <details open><summary>Snack‑Strategie pro Stunde 🍌</summary><ul id="snackStrategy" class="small"></ul></details>
-    <div style="margin-top:12px"><table><thead><tr><th style="width:8ch">Zeit</th><th>Gemischter Drink</th><th>Essen</th></tr></thead><tbody id="scheduleBody"></tbody></table></div>
     <details><summary>Nachfüllstrategie 💧</summary><ul id="refillStrategy" class="small"></ul></details>
   </section>
 
@@ -543,9 +542,6 @@ function buildSnackStrategy(hours, snickers, bananas){
   items.push('Letztes Drittel: eher Drink und kleine, schnelle KH‑Portionen statt schwerem Essen.');
   if(hours >= 6) items.push('Bei langen Touren spätestens alle 60–90 min bewusst etwas essen, auch ohne Hunger.');
   return items;
-}
-function formatHours(hours){
-  return Number.isInteger(hours) ? String(hours) : hours.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
 }
 function formatLiters(ml){
   return (ml / 1000).toFixed(1).replace('.', ',') + ' l';
@@ -745,32 +741,6 @@ function compute(){
   document.getElementById('snackStrategy').innerHTML = buildSnackStrategy(Math.max(1, Math.ceil(duration)), snickers, bananas).map(x => '<li>'+x+'</li>').join('');
   document.getElementById('refillStrategy').innerHTML = buildRefillStrategy(totalMl, bottleMl, duration).map(x => '<li>'+x+'</li>').join('');
   document.getElementById('packLogic').innerHTML = buildPackLogic(duration, state.hotMode, totalMl, refillsNeeded).map(x => '<li>'+x+'</li>').join('');
-
-  const tbody = document.getElementById('scheduleBody');
-  tbody.innerHTML = '';
-  const hours = Math.max(1, Math.ceil(duration));
-  let snLeft = snickers * 5, bananaLeft = bananas * 2;
-  for(let h=0; h<hours; h++){
-    const segmentEnd = Math.min(h + 1, duration);
-    const segmentHours = segmentEnd - h;
-    const tr = el('tr');
-    tr.appendChild(el('td','', formatHours(h)+'–'+formatHours(segmentEnd)+' h'));
-    const tdDrink = el('td');
-    tdDrink.textContent = formatLiters(mlPerHour * segmentHours) + ' gemischter Drink';
-    tr.appendChild(tdDrink);
-    const eat = [];
-    if(h===0) eat.push('nichts essen / sachte einrollen');
-    if(h===1 && bananaLeft>0){ eat.push('½ Banane'); bananaLeft--; }
-    if(h>=1 && segmentHours >= 0.75){
-      if(snLeft>0){ eat.push('~1/5 Snickers'); snLeft--; }
-      if(h >= Math.ceil(hours*0.66)) eat.push('eher schnelle KH und gemischten Drink bevorzugen');
-    }
-    if(segmentHours < 0.75) eat.push('kleine Portion nach Bedarf');
-    const tdEat = el('td');
-    tdEat.innerHTML = eat.length ? '<ul class="small">'+eat.map(x => '<li>'+x+'</li>').join('')+'</ul>' : '<span class="muted">optional</span>';
-    tr.appendChild(tdEat);
-    tbody.appendChild(tr);
-  }
 
   document.getElementById('sumDistance').textContent = state.distance + ' km';
   document.getElementById('sumDuration').textContent = (Math.round(duration*4)/4).toFixed(1) + ' h';
