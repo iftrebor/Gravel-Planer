@@ -99,6 +99,6 @@ export function calculateTour(rawInput = {}) {
     squeezeCapacityMl,
     gelPerSqueezeMl,
     extraGelVesselMl,
-    totalSalt: totalSodium / SODIUM_PER_MG_SALT
+    totalSalt: totalSodium / SODIUM_PER_MG_SALT / 1000
   };
 }

@@ -26,6 +26,7 @@ test('calculates a standard 130 km tour', () => {
   assert.equal(result.gelPerSqueezeMl, 206);
   assert.equal(result.extraGelVesselMl, 0);
   assert.equal(result.totalSodium, 1277);
+  assert.equal(result.totalSalt, 3.25);
 });
 
 test('converts salt input to sodium output', () => {
