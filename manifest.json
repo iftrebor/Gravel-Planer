@@ -1,7 +1,10 @@
 {
-  "name": "Gravel‑Tour Plan v6.1",
+  "id": "./",
+  "name": "Gravel-Tour Plan",
   "short_name": "Gravel Plan",
+  "description": "Persönlicher Ernährungs-, Trink- und Packplaner für Gravel-Touren.",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0b0f14",
   "theme_color": "#0b0f14",
@@ -9,12 +12,14 @@
     {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
