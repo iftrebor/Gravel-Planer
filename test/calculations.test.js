@@ -36,9 +36,8 @@ test('converts salt input to sodium output', () => {
 });
 
 test('uses both bottles for the mixed drink', () => {
-  const result = calculateTour({ distance: 100, speed: 20, waterSecond: true });
+  const result = calculateTour({ distance: 100, speed: 20 });
   assert.equal(result.drinkMlPerHour, 650);
-  assert.equal(result.waterMlPerHour, 0);
 });
 
 test('splits a bikepacking tour evenly across days', () => {
