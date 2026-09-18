@@ -224,7 +224,7 @@ details>summary{cursor:pointer;font-weight:700}
           <div class="kpi"><div class="k">Dauer</div><div class="v" id="kpiDuration">–</div><div class="s">Distanz ÷ Tempo</div></div>
           <div class="kpi"><div class="k">Gesamt trinken</div><div class="v" id="kpiDrink">–</div><div class="s">über die ganze Tour</div></div>
           <div class="kpi"><div class="k">Gesamt KH</div><div class="v" id="kpiCarbs">–</div><div class="s">Zielwert</div></div>
-          <div class="kpi"><div class="k">Gesamt Natrium</div><div class="v" id="kpiSodium">–</div><div class="s">Zielwert</div></div>
+          <div class="kpi"><div class="k">Gesamt Salz</div><div class="v" id="kpiSodium">–</div><div class="s">Natrium nur als Zusatzwert</div></div>
           <div class="kpi"><div class="k">KH je Flasche</div><div class="v" id="kpiCarbBottle">–</div><div class="s" id="kpiCarbBottleSub">–</div></div>
           <div class="kpi"><div class="k">Salz je Flasche</div><div class="v" id="kpiSaltBottle">–</div><div class="s" id="kpiSaltBottleSub">–</div></div>
         </div>
@@ -335,7 +335,7 @@ details>summary{cursor:pointer;font-weight:700}
         <div class="kpi"><div class="k">Dauer</div><div class="v" id="kpiDuration_m">–</div><div class="s">Distanz ÷ Tempo</div></div>
         <div class="kpi"><div class="k">Gesamt trinken</div><div class="v" id="kpiDrink_m">–</div><div class="s">über die ganze Tour</div></div>
         <div class="kpi"><div class="k">Gesamt KH</div><div class="v" id="kpiCarbs_m">–</div><div class="s">Zielwert</div></div>
-        <div class="kpi"><div class="k">Gesamt Natrium</div><div class="v" id="kpiSodium_m">–</div><div class="s">Zielwert</div></div>
+        <div class="kpi"><div class="k">Gesamt Salz</div><div class="v" id="kpiSodium_m">–</div><div class="s">Natrium nur als Zusatzwert</div></div>
         <div class="kpi"><div class="k">KH je Flasche</div><div class="v" id="kpiCarbBottle_m">–</div><div class="s" id="kpiCarbBottleSub_m">–</div></div>
         <div class="kpi"><div class="k">Salz je Flasche</div><div class="v" id="kpiSaltBottle_m">–</div><div class="s" id="kpiSaltBottleSub_m">–</div></div>
       </div>
@@ -366,7 +366,7 @@ details>summary{cursor:pointer;font-weight:700}
       <div class="card"><h3>Mitnehmen & Transport 🎒</h3><ul id="carry" class="small"></ul></div>
     </div>
     <details open><summary>Snack‑Strategie pro Stunde 🍌</summary><ul id="snackStrategy" class="small"></ul></details>
-    <div style="margin-top:12px"><table><thead><tr><th style="width:6ch">Std</th><th>Trinken</th><th>Essen</th></tr></thead><tbody id="scheduleBody"></tbody></table></div>
+    <div style="margin-top:12px"><table><thead><tr><th style="width:8ch">Zeit</th><th>Gemischter Drink</th><th>Essen</th></tr></thead><tbody id="scheduleBody"></tbody></table></div>
     <details><summary>Nachfüllstrategie 💧</summary><ul id="refillStrategy" class="small"></ul></details>
   </section>
 
@@ -537,14 +537,18 @@ function buildSnackStrategy(hours, snickers, bananas){
   if(hours >= 6) items.push('Bei langen Touren spätestens alle 60–90 min bewusst etwas essen, auch ohne Hunger.');
   return items;
 }
+function formatHours(hours){
+  return Number.isInteger(hours) ? String(hours) : hours.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
+}
 function buildRefillStrategy(totalMl, bottleMl, duration){
   const startVolume = bottleMl * 2;
-  const refillsNeeded = Math.max(0, Math.ceil((totalMl - startVolume) / bottleMl));
-  const items = ['Startkapazität mit 2 Flaschen: ' + startVolume + ' ml.'];
+  const totalBottles = Math.max(1, Math.ceil(totalMl / bottleMl));
+  const refillsNeeded = Math.max(0, totalBottles - 2);
+  const items = ['Mit 2 Flaschen starten: ' + startVolume + ' ml gemischter Drink.'];
   if(totalMl <= startVolume){
-    items.push('Für diese Tour ist voraussichtlich kein Nachfüllen nötig.');
+    items.push('Für diese Tour ist voraussichtlich kein weiteres Nachfüllen nötig.');
   } else {
-    items.push('Es werden voraussichtlich ' + refillsNeeded + ' zusätzliche Flaschenfüllungen benötigt.');
+    items.push(refillsNeeded + ' weitere Flaschenfüllungen einplanen; insgesamt ' + totalBottles + ' Flaschenfüllungen.');
     items.push('Mit 2× gemischtem Drink starten und unterwegs an einem Nachfüllpunkt auffüllen.');
   }
   if(duration >= 6) items.push('Bei langer Tour Stopps und Nachfüllmöglichkeiten vorab planen.');
@@ -661,23 +665,23 @@ function compute(){
   const totalBottles = calculation.totalBottleFills;
   const totalCarbDrink = calculation.totalCarbs;
   const totalNa = calculation.totalSodium;
+  const totalSalt = calculation.totalSalt;
   const refillsNeeded = calculation.refillsNeeded;
 
   mirror(['kpiDuration','kpiDuration_m'], (Math.round(duration*4)/4).toFixed(2) + ' h');
   mirror(['kpiDrink','kpiDrink_m'], totalMl + ' ml');
   mirror(['kpiCarbs','kpiCarbs_m'], totalCarbDrink + ' g');
-  mirror(['kpiSodium','kpiSodium_m'], totalNa + ' mg');
+  mirror(['kpiSodium','kpiSodium_m'], totalSalt.toFixed(1) + ' g');
   mirror(['kpiCarbBottle','kpiCarbBottle_m'], Math.round(carbPerBottle) + ' g');
   mirror(['kpiCarbBottleSub','kpiCarbBottleSub_m'], Math.round(carbPerBottle*ratio.f) + ' g Fruktose + ' + Math.round(carbPerBottle*ratio.m) + ' g Malto');
   mirror(['kpiSaltBottle','kpiSaltBottle_m'], (saltPerBottle / 1000).toFixed(2) + ' g');
   mirror(['kpiSaltBottleSub','kpiSaltBottleSub_m'], '≈ ' + Math.round(mgNaPerBottle) + ' mg Na pro Flasche');
   mirror(['badgeSplit','badgeSplit_m'], '2× Drink · ' + drinkMlPerH + ' ml/h');
   mirror(['badgeBottles','badgeBottles_m'], 'ca. ' + totalBottles + ' Flaschen gesamt');
-  mirror(['badgeRefill','badgeRefill_m'], refillsNeeded > 0 ? ('Refills nötig: ' + refillsNeeded) : 'Kein Refill nötig');
+  mirror(['badgeRefill','badgeRefill_m'], refillsNeeded > 0 ? ('+' + refillsNeeded + ' weitere Füllungen') : 'Kein weiteres Nachfüllen');
 
   const totalMalto = Math.round(totalCarbDrink * ratio.m);
   const totalFructose = Math.round(totalCarbDrink * ratio.f);
-  const totalSalt = calculation.totalSalt;
 
   document.getElementById('gelMixList').innerHTML = [
     totalMalto + ' g Maltodextrin',
@@ -686,8 +690,8 @@ function compute(){
     calculation.gelWaterMl + ' ml Wasser für das gesamte Gel-Konzentrat <span class="muted">(0,7 ml je g KH)</span>',
     'Aroma / Sirup nach Geschmack',
     'Pulver und Salz mit dem Wasser unter Erwärmen gründlich auflösen und anschließend abkühlen lassen',
-    'Das Konzentrat auf die zwei 800-ml-Flaschen und die zwei Squeeze-Flaschen verteilen',
-    calculation.gelPerBottleMassG.toFixed(1) + ' g Gel-Konzentrat je 800-ml-Trinkflasche',
+    'Das Konzentrat auf die zwei ' + bottleMl + '-ml-Flaschen und die zwei Squeeze-Flaschen verteilen',
+    calculation.gelPerBottleMassG.toFixed(1) + ' g Gel-Konzentrat je ' + bottleMl + '-ml-Trinkflasche',
     calculation.gelPerSqueezeMassG.toFixed(1) + ' g Gel je Squeeze-Flasche (2 × 250 ml gleichmäßig befüllen)',
     calculation.extraGelVesselMassG > 0
       ? calculation.extraGelVesselMassG.toFixed(1) + ' g bleiben übrig: in ein weiteres Gefäß füllen'
@@ -696,14 +700,14 @@ function compute(){
   ].map(x => '<li>'+x+'</li>').join('');
 
   document.getElementById('recipeList').innerHTML = [
-    calculation.gelPerBottleMassG.toFixed(1) + ' g Gel-Konzentrat je 800-ml-Trinkflasche',
+    calculation.gelPerBottleMassG.toFixed(1) + ' g Gel-Konzentrat je ' + bottleMl + '-ml-Trinkflasche',
     'Dann mit Wasser bis ' + bottleMl + ' ml auffüllen'
   ].map(x => '<li>'+x+'</li>').join('');
 
   document.getElementById('targets').innerHTML = [
     '<b>Trinken:</b> ' + mlPerHour + ' ml/h gemischter Drink',
-    '<b>KH:</b> ' + carbPerHour + ' g/h · <b>Salz:</b> ' + saltPerHour + ' mg/h (~' + Math.round(calculation.naPerHour) + ' mg Natrium/h)',
-    state.hotMode ? 'Hitze-Modus aktiv: Berechnung mindestens mit 800 ml/h und 850 mg Salz/h – KH bleiben unverändert' : 'Hitze-Modus aus: Berechnung folgt exakt deinen Eingabewerten',
+    '<b>Salz:</b> ' + saltPerHour + ' mg/h <span class="muted">(≈ ' + Math.round(calculation.naPerHour) + ' mg Natrium/h)</span> · <b>KH:</b> ' + carbPerHour + ' g/h',
+    state.hotMode ? 'Hitze-Modus: mindestens 800 ml/h und 850 mg Salz/h.' : 'Hitze-Modus aus',
     'Flaschen: 2× Gel-Mischung'
   ].map(x => '<li>'+x+'</li>').join('');
 
@@ -712,8 +716,8 @@ function compute(){
     '<b>Gesamttrinkmenge:</b> ' + totalMl + ' ml gemischter Drink',
     '<b>Bikepacking:</b> ' + days + ' Tag' + (days === 1 ? '' : 'e') + ' · pro Tag ca. ' + calculation.dailyDistance.toFixed(1) + ' km, ' + calculation.dailyDuration.toFixed(2) + ' h, ' + calculation.dailyTotalMl + ' ml, ' + calculation.dailyTotalCarbs + ' g KH und ' + calculation.dailyTotalSalt.toFixed(2) + ' g Salz',
     '<b>Flaschen gesamt:</b> ' + totalBottles + ' × ' + bottleMl + ' ml',
-    '<b>KH über Drink (Ziel):</b> ~' + totalCarbDrink + ' g',
-    '<b>Natrium gesamt (Ziel):</b> ~' + totalNa + ' mg'
+    '<b>KH gesamt:</b> ~' + totalCarbDrink + ' g',
+    '<b>Salz gesamt:</b> ~' + totalSalt.toFixed(1) + ' g <span class="muted">(≈ ' + totalNa + ' mg Natrium)</span>'
   ].map(x => '<li>'+x+'</li>').join('');
 
   const snickers = Math.max(1, Math.ceil(duration * 0.33));
@@ -737,18 +741,21 @@ function compute(){
   const hours = Math.max(1, Math.ceil(duration));
   let snLeft = snickers * 5, bananaLeft = bananas * 2;
   for(let h=0; h<hours; h++){
+    const segmentEnd = Math.min(h + 1, duration);
+    const segmentHours = segmentEnd - h;
     const tr = el('tr');
-    tr.appendChild(el('td','', h+'–'+(h+1)));
+    tr.appendChild(el('td','', formatHours(h)+'–'+formatHours(segmentEnd)+' h'));
     const tdDrink = el('td');
-    tdDrink.textContent = mlPerHour + ' ml gemischter Drink';
+    tdDrink.textContent = Math.round(mlPerHour * segmentHours) + ' ml gemischter Drink';
     tr.appendChild(tdDrink);
     const eat = [];
     if(h===0) eat.push('nichts essen / sachte einrollen');
     if(h===1 && bananaLeft>0){ eat.push('½ Banane'); bananaLeft--; }
-    if(h>=1){
+    if(h>=1 && segmentHours >= 0.75){
       if(snLeft>0){ eat.push('~1/5 Snickers'); snLeft--; }
       if(h >= Math.ceil(hours*0.66)) eat.push('eher schnelle KH und gemischten Drink bevorzugen');
     }
+    if(segmentHours < 0.75) eat.push('kleine Portion nach Bedarf');
     const tdEat = el('td');
     tdEat.innerHTML = eat.length ? '<ul class="small">'+eat.map(x => '<li>'+x+'</li>').join('')+'</ul>' : '<span class="muted">optional</span>';
     tr.appendChild(tdEat);
@@ -761,15 +768,15 @@ function compute(){
   document.getElementById('sumCarbPerH').textContent = carbPerHour + ' g';
 
   const summary = [
-    'Flaschenmix: 2× gemischter Drink',
-    'Gel-Konzentrat gesamt: ' + totalCarbDrink + ' g KH und ' + totalSalt.toFixed(1) + ' g Salz',
-    'Bikepacking: ' + days + ' Tag' + (days === 1 ? '' : 'e') + ' · pro Tag ca. ' + calculation.dailyDistance.toFixed(1) + ' km, ' + calculation.dailyTotalCarbs + ' g KH und ' + calculation.dailyTotalMl + ' ml',
-    'Dosierung: ' + calculation.gelPerBottleMassG.toFixed(1) + ' g Gel je 800-ml-Trinkflasche',
+    'Tour: ' + state.distance + ' km · ' + (Math.round(duration*4)/4).toFixed(2) + ' h · ' + days + ' Tag' + (days === 1 ? '' : 'e'),
+    'Gemischter Drink: ' + drinkMlPerH + ' ml/h · gesamt ' + totalMl + ' ml',
+    'Kohlenhydrate: ' + carbPerHour + ' g/h · gesamt ' + totalCarbDrink + ' g',
+    'Salz: ' + saltPerHour + ' mg/h · gesamt ' + totalSalt.toFixed(1) + ' g',
+    'Dosierung: ' + calculation.gelPerBottleMassG.toFixed(1) + ' g Gel je ' + bottleMl + '-ml-Trinkflasche',
     'Squeeze-Flaschen: ' + calculation.gelPerSqueezeMassG.toFixed(1) + ' g je Flasche',
-    'Gemischter Drink je Stunde: ca. ' + drinkMlPerH + ' ml',
-    'Refills: ' + (refillsNeeded > 0 ? refillsNeeded + ' einplanen' : 'nicht nötig'),
+    'Flaschenfüllungen: 2 starten · ' + (refillsNeeded > 0 ? refillsNeeded + ' weitere einplanen' : 'kein weiteres Nachfüllen nötig'),
     'Snacks: ' + snickers + '× Snickers und ' + bananas + '× Banane',
-    state.hotMode ? 'Hitze-Modus aktiv: höheres Trink- und Salz-Ziel berücksichtigt, KH bleiben konstant' : 'Hitze-Modus aus'
+    state.hotMode ? 'Hitze-Modus: mindestens 800 ml/h und 850 mg Salz/h' : 'Hitze-Modus aus'
   ];
   document.getElementById('summaryList').innerHTML = summary.map(x => '<li>'+x+'</li>').join('');
   document.getElementById('planSummaryList').innerHTML = summary.map(x => '<li>'+x+'</li>').join('');
