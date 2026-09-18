@@ -373,14 +373,13 @@ details>summary{cursor:pointer;font-weight:700}
     <p class="gel-intro">Erst das Gel-Konzentrat anrühren, danach jede Trinkflasche einzeln dosieren und mit Wasser auffüllen.</p>
     <div class="gel-cards">
       <div class="card gel-card">
-        <h3>1. Gel-Konzentrat anrühren 🧴</h3>
+        <h3>Gel vorbereiten 🧴</h3>
         <h4>Zutaten</h4>
         <ul id="gelIngredientsList" class="small"></ul>
         <details><summary>Anleitung</summary><ul id="gelInstructionsList" class="small"></ul></details>
         <h4>Abfüllen</h4>
         <ul id="gelFillList" class="small"></ul>
       </div>
-      <div class="card gel-card"><h3>2. Trinkflaschen vorbereiten 🧪</h3><ul id="recipeList" class="small"></ul></div>
     </div>
   </section>
 
@@ -731,7 +730,6 @@ function compute(){
 
   document.getElementById('gelFillList').innerHTML = [
     'Das Konzentrat auf die zwei ' + bottleMl + '-ml-Flaschen und die zwei Squeeze-Flaschen verteilen',
-    calculation.gelPerBottleMassG.toFixed(1) + ' g Gel-Konzentrat je ' + bottleMl + '-ml-Trinkflasche',
     calculation.gelPerSqueezeMassG.toFixed(1) + ' g Gel je Squeeze-Flasche (2 × 250 ml gleichmäßig befüllen)',
     calculation.extraGelVesselMassG > 0
       ? calculation.extraGelVesselMassG.toFixed(1) + ' g bleiben übrig: in ein weiteres Gefäß füllen'
@@ -739,7 +737,7 @@ function compute(){
     'Für die Tour reichen damit ca. ' + Math.max(1, Math.ceil(totalMl / bottleMl)) + ' gemischte Trinkflaschen'
   ].map(x => '<li>'+x+'</li>').join('');
 
-  document.getElementById('recipeList').innerHTML = [
+  document.getElementById('gelFillList').innerHTML += [
     calculation.gelPerBottleMassG.toFixed(1) + ' g Gel-Konzentrat je ' + bottleMl + '-ml-Trinkflasche',
     'Dann mit Wasser bis ' + bottleMl + ' ml auffüllen'
   ].map(x => '<li>'+x+'</li>').join('');
