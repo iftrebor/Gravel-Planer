@@ -145,7 +145,7 @@ details>summary{cursor:pointer;font-weight:700}
           <div class="row">
             <div class="field">
               <label for="distance">Distanz (km) 🚴</label>
-              <input type="number" id="distance" value="130" min="10" step="5">
+              <input type="number" id="distance" value="130" min="10" max="1000" step="5">
               <div class="help">Typisch: 80–200 km</div>
             </div>
             <div class="field">
@@ -174,9 +174,9 @@ details>summary{cursor:pointer;font-weight:700}
               <div class="help">Typisch: 50–80 g/h</div>
             </div>
             <div class="field">
-              <label for="naPerHour">Natrium‑Ziel (mg/h) 🧂</label>
-              <input type="number" id="naPerHour" value="500" min="200" max="1500" step="25">
-              <div class="help">Typisch: 400–800 mg/h</div>
+              <label for="saltPerHour">Salz-Ziel (mg/h) 🧂</label>
+              <input type="number" id="saltPerHour" value="500" min="200" max="1500" step="25">
+              <div class="help">1 g Salz enthält ca. 393 mg Natrium · Startwert: 500 mg Salz/h</div>
             </div>
             <div class="field">
               <label for="bottleMl">Flaschengröße (ml) 🍼</label>
@@ -200,7 +200,7 @@ details>summary{cursor:pointer;font-weight:700}
         </div>
 
         <div class="toolbar">
-          <button class="btn" id="suggestBtn">✨ Empfehlungen übernehmen<span class="btn-help">normal: 650 ml/h · 60 g/h · 500 mg/h · Flasche 800 ml · Verhältnis 1:2<br>Hitze: 800 ml/h · 60 g/h · 850 mg/h · Flasche 800 ml · Verhältnis 1:2</span></button>
+          <button class="btn" id="suggestBtn">✨ Empfehlungen übernehmen<span class="btn-help">normal: 650 ml/h · 60 g/h · 500 mg Salz/h · Flasche 800 ml · Verhältnis 1:2<br>Hitze: 800 ml/h · 60 g/h · 850 mg Salz/h · Flasche 800 ml · Verhältnis 1:2</span></button>
           <button class="btn ghost" id="resetBtn">↺ Zurücksetzen</button>
           <button class="btn primary" id="calcBtn">🧮 Plan berechnen</button>
         </div>
@@ -234,7 +234,7 @@ details>summary{cursor:pointer;font-weight:700}
 
     <div class="plan-mobile">
       <div class="toolbar">
-        <button class="btn" id="suggestBtn_m">✨ Empfehlungen übernehmen<span class="btn-help">normal: 650 ml/h · 60 g/h · 500 mg/h · Flasche 800 ml · Verhältnis 1:2<br>Hitze: 800 ml/h · 60 g/h · 850 mg/h · Flasche 800 ml · Verhältnis 1:2</span></button>
+        <button class="btn" id="suggestBtn_m">✨ Empfehlungen übernehmen<span class="btn-help">normal: 650 ml/h · 60 g/h · 500 mg Salz/h · Flasche 800 ml · Verhältnis 1:2<br>Hitze: 800 ml/h · 60 g/h · 850 mg Salz/h · Flasche 800 ml · Verhältnis 1:2</span></button>
         <button class="btn ghost" id="resetBtn_m">↺ Zurücksetzen</button>
         <button class="btn primary" id="calcBtn_m">🧮 Plan berechnen</button>
       </div>
@@ -245,7 +245,7 @@ details>summary{cursor:pointer;font-weight:700}
           <div class="row">
             <div class="field">
               <label for="distance_m">Distanz (km) 🚴</label>
-              <input type="number" id="distance_m" value="130" min="10" step="5">
+              <input type="number" id="distance_m" value="130" min="10" max="1000" step="5">
               <div class="help">Typisch: 80–200 km</div>
             </div>
             <div class="field">
@@ -274,9 +274,9 @@ details>summary{cursor:pointer;font-weight:700}
               <div class="help">Typisch: 50–80 g/h</div>
             </div>
             <div class="field">
-              <label for="naPerHour_m">Natrium‑Ziel (mg/h) 🧂</label>
-              <input type="number" id="naPerHour_m" value="500" min="200" max="1500" step="25">
-              <div class="help">Typisch: 400–800 mg/h</div>
+              <label for="saltPerHour_m">Salz-Ziel (mg/h) 🧂</label>
+              <input type="number" id="saltPerHour_m" value="500" min="200" max="1500" step="25">
+              <div class="help">1 g Salz enthält ca. 393 mg Natrium · Startwert: 500 mg Salz/h</div>
             </div>
             <div class="field">
               <label for="bottleMl_m">Flaschengröße (ml) 🍼</label>
@@ -393,7 +393,7 @@ const inputMap = {
   hotMode:['hotMode','hotMode_m'],
   mlPerHour:['mlPerHour','mlPerHour_m'],
   carbPerHour:['carbPerHour','carbPerHour_m'],
-  naPerHour:['naPerHour','naPerHour_m'],
+  saltPerHour:['saltPerHour','saltPerHour_m'],
   bottleMl:['bottleMl','bottleMl_m'],
   ratio:['ratio','ratio_m'],
   waterSecond:['waterSecond','waterSecond_m']
@@ -474,7 +474,7 @@ function applySuggestions(){
   const hot = !!getVal('hotMode');
   setVal('mlPerHour', hot ? 800 : 650);
   setVal('carbPerHour', 60);
-  setVal('naPerHour', hot ? 850 : 500);
+  setVal('saltPerHour', hot ? 850 : 500);
   setVal('bottleMl', 800);
   setVal('ratio', '1:2');
   compute();
@@ -482,7 +482,7 @@ function applySuggestions(){
 function applyHotModeDefaults(isHot){
   setVal('mlPerHour', isHot ? 800 : 650);
   setVal('carbPerHour', 60);
-  setVal('naPerHour', isHot ? 850 : 500);
+  setVal('saltPerHour', isHot ? 850 : 500);
   compute();
 }
 function resetInputs(){
@@ -492,19 +492,18 @@ function resetInputs(){
   setVal('hotMode', false);
   setVal('mlPerHour', 650);
   setVal('carbPerHour', 60);
-  setVal('naPerHour', 500);
+  setVal('saltPerHour', 500);
   setVal('bottleMl', 800);
   setVal('ratio', '1:2');
   setVal('waterSecond', false);
   compute();
 }
 
-function buildSnackStrategy(hours, snickers, bananas, extCarb){
+function buildSnackStrategy(hours, snickers, bananas){
   const items = ['Start bis Stunde 1: ruhig anlaufen, nur trinken.'];
   if (bananas > 0) items.push('Ab Stunde 1: ½ Banane als sanfter Einstieg.');
   items.push('Ab Stunde 1–2: kleine Portionen statt großer Snacks.');
   items.push(snickers + '× Snickers gesamt einplanen, jeweils in 5 kleine Bissen teilen.');
-  items.push(extCarb + '× zusätzliche KH‑Portionen (Reiswaffel / Fruchtriegel / Datteln), vor allem in den längeren Mittelteil legen.');
   items.push('Letztes Drittel: eher Drink und kleine, schnelle KH‑Portionen statt schwerem Essen.');
   if(hours >= 6) items.push('Bei langen Touren spätestens alle 60–90 min bewusst etwas essen, auch ohne Hunger.');
   return items;
@@ -537,7 +536,7 @@ function readFormState(){
     hotMode: getVal('hotMode'),
     mlPerHour: getVal('mlPerHour'),
     carbPerHour: getVal('carbPerHour'),
-    naPerHour: getVal('naPerHour'),
+    saltPerHour: getVal('saltPerHour'),
     bottleMl: getVal('bottleMl'),
     ratio: getVal('ratio'),
     waterSecond: getVal('waterSecond')
@@ -554,7 +553,7 @@ function compute(){
     hotMode: state.hotMode,
     mlPerHour: state.mlPerHour,
     carbPerHour: state.carbPerHour,
-    naPerHour: state.naPerHour,
+    saltPerHour: state.saltPerHour,
     bottleMl: state.bottleMl,
     ratio: ratio.label,
     waterSecond: state.waterSecond
@@ -563,7 +562,7 @@ function compute(){
   const duration = calculation.duration;
   const mlPerHour = calculation.mlPerHour;
   const carbPerHour = state.carbPerHour;
-  const naPerHour = calculation.naPerHour;
+  const saltPerHour = calculation.saltPerHour;
   const bottleMl = state.bottleMl;
   const waterSecond = state.waterSecond;
   const drinkMlPerH = calculation.drinkMlPerHour;
@@ -585,7 +584,7 @@ function compute(){
   mirror(['kpiSodium','kpiSodium_m'], totalNa + ' mg');
   mirror(['kpiCarbBottle','kpiCarbBottle_m'], Math.round(carbPerBottle) + ' g');
   mirror(['kpiCarbBottleSub','kpiCarbBottleSub_m'], Math.round(carbPerBottle*ratio.f) + ' g Fruktose + ' + Math.round(carbPerBottle*ratio.m) + ' g Malto');
-  mirror(['kpiSaltBottle','kpiSaltBottle_m'], (Math.round(saltPerBottle*10)/10).toFixed(1) + ' g');
+  mirror(['kpiSaltBottle','kpiSaltBottle_m'], (saltPerBottle / 1000).toFixed(2) + ' g');
   mirror(['kpiSaltBottleSub','kpiSaltBottleSub_m'], '≈ ' + Math.round(mgNaPerBottle) + ' mg Na pro Flasche');
   mirror(['badgeSplit','badgeSplit_m'], 'Drink ' + drinkMlPerH + ' ml/h · Wasser ' + waterMlPerH + ' ml/h');
   mirror(['badgeBottles','badgeBottles_m'], 'ca. ' + totalBottles + ' Flaschen gesamt');
@@ -594,21 +593,29 @@ function compute(){
   const mixedDrinkBottles = bottleMl > 0 ? (totalDrinkMl / bottleMl) : 0;
   const totalMalto = Math.round(totalCarbDrink * ratio.m);
   const totalFructose = Math.round(totalCarbDrink * ratio.f);
-  const totalSalt = totalNa / SODIUM_PER_GRAM_SALT;
+  const totalSalt = totalNa / SODIUM_PER_GRAM_SALT * 1000;
 
   document.getElementById('gelMixList').innerHTML = [
     totalMalto + ' g Maltodextrin',
     totalFructose + ' g Fruktose',
     totalSalt.toFixed(1) + ' g Salz <span class="muted">(~' + totalNa + ' mg Natrium)</span>',
+    calculation.gelWaterMl + ' ml Wasser für das gesamte Gel-Konzentrat <span class="muted">(0,7 ml je g KH)</span>',
     'Aroma / Sirup nach Geschmack',
-    'Mit wenig Wasser zu einem gut dosierbaren Gel-Konzentrat anrühren und in 1 Dosierflasche füllen',
+    'Pulver und Salz mit dem Wasser unter Erwärmen gründlich auflösen und anschließend abkühlen lassen',
+    'Das Konzentrat auf die zwei 800-ml-Flaschen und die zwei Squeeze-Flaschen verteilen',
+    calculation.gelPerBottleMl + ' ml Gel-Konzentrat je 800-ml-Trinkflasche',
+    calculation.gelPerSqueezeMl.toFixed(1) + ' ml Gel-Konzentrat je Squeeze-Flasche (2 × 250 ml gleichmäßig auffüllen)',
+    calculation.extraGelVesselMl > 0
+      ? calculation.extraGelVesselMl + ' ml bleiben übrig: in ein weiteres Gefäß füllen'
+      : 'Die zwei 250-ml-Squeeze-Flaschen reichen für das Rest-Konzentrat',
     'Für die Tour reichen damit ca. ' + Math.max(1, Math.ceil(mixedDrinkBottles)) + ' gemischte Trinkflaschen'
   ].map(x => '<li>'+x+'</li>').join('');
 
   document.getElementById('recipeList').innerHTML = [
     Math.round(carbPerBottle*ratio.m) + ' g Maltodextrin',
     Math.round(carbPerBottle*ratio.f) + ' g Fruktose',
-    saltPerBottle.toFixed(1) + ' g Salz <span class="muted">(~' + Math.round(mgNaPerBottle) + ' mg Natrium)</span>',
+    (saltPerBottle / 1000).toFixed(2) + ' g Salz <span class="muted">(~' + Math.round(mgNaPerBottle) + ' mg Natrium)</span>',
+    calculation.gelWaterPerBottleMl + ' ml Wasser je 800-ml-Trinkflasche für den Gel-Anteil',
     'Pro gemischter Flasche anteilig aus dem Gel-Konzentrat dosieren',
     'Dann mit Wasser bis ' + bottleMl + ' ml auffüllen',
     waterSecond ? '2. Flasche bleibt Wasser' : '2. Flasche ebenfalls als gemischter Drink ansetzen'
@@ -616,8 +623,8 @@ function compute(){
 
   document.getElementById('targets').innerHTML = [
     '<b>Trinken:</b> ' + mlPerHour + ' ml/h <span class="muted">(Drink ~' + drinkMlPerH + ' · Wasser ~' + waterMlPerH + ')</span>',
-    '<b>KH:</b> ' + carbPerHour + ' g/h · <b>Na:</b> ' + naPerHour + ' mg/h',
-    state.hotMode ? 'Hitze-Modus aktiv: Berechnung mindestens mit 800 ml/h und 850 mg/h – KH bleiben unverändert' : 'Hitze-Modus aus: Berechnung folgt exakt deinen Eingabewerten',
+    '<b>KH:</b> ' + carbPerHour + ' g/h · <b>Salz:</b> ' + saltPerHour + ' mg/h (~' + Math.round(calculation.naPerHour) + ' mg Natrium/h)',
+    state.hotMode ? 'Hitze-Modus aktiv: Berechnung mindestens mit 800 ml/h und 850 mg Salz/h – KH bleiben unverändert' : 'Hitze-Modus aus: Berechnung folgt exakt deinen Eingabewerten',
     waterSecond ? '2. Flasche: Wasser' : '2. Flasche: ebenfalls Drink'
   ].map(x => '<li>'+x+'</li>').join('');
 
@@ -631,26 +638,24 @@ function compute(){
 
   const snickers = Math.max(1, Math.ceil(duration * 0.33));
   const bananas = 1;
-  const extCarb = Math.max(1, Math.round(duration * 0.3));
 
   document.getElementById('carry').innerHTML = [
     'Am Rad: Trinkflaschen (' + (waterSecond ? '1× Drink, 1× Wasser' : '2× Drink') + ')',
     '1 Gel-/Konzentratflasche mit der Gesamtmischung',
     snickers + '× Snickers (geteilt essen)',
     bananas + '× Banane',
-    extCarb + '× externe KH‑Portion (Reiswaffel / Fruchtriegel / Datteln)',
     'Aroma / Sirup für das Gel',
     'Kleiner Müllbeutel'
   ].map(x => '<li>'+x+'</li>').join('');
 
-  document.getElementById('snackStrategy').innerHTML = buildSnackStrategy(Math.max(1, Math.ceil(duration)), snickers, bananas, extCarb).map(x => '<li>'+x+'</li>').join('');
+  document.getElementById('snackStrategy').innerHTML = buildSnackStrategy(Math.max(1, Math.ceil(duration)), snickers, bananas).map(x => '<li>'+x+'</li>').join('');
   document.getElementById('refillStrategy').innerHTML = buildRefillStrategy(totalMl, bottleMl, waterSecond, duration).map(x => '<li>'+x+'</li>').join('');
   document.getElementById('packLogic').innerHTML = buildPackLogic(duration, state.hotMode, totalMl, refillsNeeded).map(x => '<li>'+x+'</li>').join('');
 
   const tbody = document.getElementById('scheduleBody');
   tbody.innerHTML = '';
   const hours = Math.max(1, Math.ceil(duration));
-  let snLeft = snickers * 5, extLeft = extCarb, bananaLeft = bananas * 2;
+  let snLeft = snickers * 5, bananaLeft = bananas * 2;
   for(let h=0; h<hours; h++){
     const tr = el('tr');
     tr.appendChild(el('td','', h+'–'+(h+1)));
@@ -662,7 +667,6 @@ function compute(){
     if(h===1 && bananaLeft>0){ eat.push('½ Banane'); bananaLeft--; }
     if(h>=1){
       if(snLeft>0){ eat.push('~1/5 Snickers'); snLeft--; }
-      if(extLeft>0 && (h%2===1)){ eat.push('Kleine KH‑Portion (Reiswaffel/Fruchtriegel/Datteln)'); extLeft--; }
       if(h >= Math.ceil(hours*0.66)) eat.push('eher schnelle KH und Drink bevorzugen');
     }
     const tdEat = el('td');
@@ -682,7 +686,7 @@ function compute(){
     'Drink je Stunde: ca. ' + drinkMlPerH + ' ml',
     'Wasser je Stunde: ca. ' + waterMlPerH + ' ml',
     'Refills: ' + (refillsNeeded > 0 ? refillsNeeded + ' einplanen' : 'nicht nötig'),
-    'Snacks: ' + snickers + '× Snickers, ' + bananas + '× Banane, ' + extCarb + '× weitere KH-Portion',
+    'Snacks: ' + snickers + '× Snickers und ' + bananas + '× Banane',
     state.hotMode ? 'Hitze-Modus aktiv: mehr Wasser und Natrium berücksichtigt, KH bleiben konstant' : 'Hitze-Modus aus'
   ];
   document.getElementById('summaryList').innerHTML = summary.map(x => '<li>'+x+'</li>').join('');
@@ -697,7 +701,7 @@ function compute(){
     hotMode: state.hotMode,
     mlPerHour: state.mlPerHour,
     carbPerHour: state.carbPerHour,
-    naPerHour: state.naPerHour,
+    saltPerHour: state.saltPerHour,
     bottleMl: state.bottleMl,
     ratio: ratio.label,
     waterSecond: state.waterSecond
@@ -709,6 +713,9 @@ function restoreFormState(){
   if(!raw) return;
   try{
     const obj = JSON.parse(raw);
+    if(obj.saltPerHour === undefined && obj.naPerHour !== undefined){
+      obj.saltPerHour = Number(obj.naPerHour);
+    }
     Object.entries(obj).forEach(([key,val]) => {
       if(inputMap[key]) setVal(key, val);
     });
@@ -775,8 +782,8 @@ function bindInput(id){
   });
 }
 [
-  'distance','speed','hotMode','mlPerHour','carbPerHour','naPerHour','bottleMl','ratio','waterSecond',
-  'distance_m','speed_m','hotMode_m','mlPerHour_m','carbPerHour_m','naPerHour_m','bottleMl_m','ratio_m','waterSecond_m'
+  'distance','speed','hotMode','mlPerHour','carbPerHour','saltPerHour','bottleMl','ratio','waterSecond',
+  'distance_m','speed_m','hotMode_m','mlPerHour_m','carbPerHour_m','saltPerHour_m','bottleMl_m','ratio_m','waterSecond_m'
 ].forEach(bindInput);
 
 document.getElementById('themeToggle').addEventListener('click', toggleTheme);
