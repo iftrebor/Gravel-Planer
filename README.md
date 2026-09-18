@@ -37,6 +37,16 @@ Die Dosierung pro 800-ml-Trinkflasche wird als Gramm ausgegeben. Für die Befül
 
 Die Anwendung besteht aus statischen HTML-, CSS- und JavaScript-Dateien und benötigt derzeit keinen Build-Schritt. Änderungen können direkt im Browser getestet werden. Nach Änderungen am Service Worker sollte die Cache-Version in `sw.js` erhöht werden, damit bereits installierte PWAs die neue App-Shell erhalten.
 
+### Automatische Tests
+
+Voraussetzung ist Node.js 22 oder neuer. Danach im Projektverzeichnis ausführen:
+
+```bash
+npm test
+```
+
+Der Test-Runner verwendet ausschließlich Node.js und benötigt keine zusätzlichen Pakete.
+
 ## Lizenz
 
 Für dieses Projekt ist derzeit keine Lizenz hinterlegt. Ergänze eine Lizenzdatei, wenn der Code zur Weiterverwendung freigegeben werden soll.
