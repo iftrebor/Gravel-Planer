@@ -15,11 +15,23 @@ test('parses ratios and falls back safely', () => {
 });
 
 test('calculates a standard 130 km tour', () => {
-  const result = calculateTour({ distance: 130, speed: 20, mlPerHour: 650, carbPerHour: 60, naPerHour: 500, bottleMl: 800 });
+  const result = calculateTour({ distance: 130, speed: 20, mlPerHour: 650, carbPerHour: 60, saltPerHour: 500, bottleMl: 800 });
   assert.equal(result.duration, 6.5);
   assert.equal(result.totalMl, 4225);
   assert.equal(result.totalCarbs, 390);
-  assert.equal(result.totalSodium, 3250);
+  assert.equal(result.gelWaterMl, 273);
+  assert.equal(result.gelWaterPerBottleMl, 61);
+  assert.equal(result.gelPerBottleMl, 127);
+  assert.equal(result.squeezeGelMl, 412);
+  assert.equal(result.gelPerSqueezeMl, 206);
+  assert.equal(result.extraGelVesselMl, 0);
+  assert.equal(result.totalSodium, 1277);
+});
+
+test('converts salt input to sodium output', () => {
+  const result = calculateTour({ saltPerHour: 1000 });
+  assert.equal(result.naPerHour, 393);
+  assert.equal(result.saltPerBottle, 1000);
 });
 
 test('splits drink and water correctly', () => {

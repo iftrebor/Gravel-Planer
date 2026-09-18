@@ -25,9 +25,11 @@ Danach ist die Anwendung unter `http://localhost:8000` erreichbar. Für Service 
 
 ## Hinweise zu den Berechnungen
 
-Die Werte sind Planungs- und Startwerte, keine medizinische Beratung. Trink-, Kohlenhydrat- und Natriumziele sollten während des Trainings getestet und an Körpergewicht, Intensität, Temperatur, Schweißrate und individuelle Verträglichkeit angepasst werden. Bei gesundheitlichen Problemen oder Unsicherheit sollte fachlicher Rat eingeholt werden.
+Die Werte sind Planungs- und Startwerte, keine medizinische Beratung. Trink-, Kohlenhydrat- und Salz-Ziele sollten während des Trainings getestet und an Körpergewicht, Intensität, Temperatur, Schweißrate und individuelle Verträglichkeit angepasst werden. Es gibt keinen allgemein passenden Salz-Stundenwert; Schweißmenge und Salzverlust unterscheiden sich stark. Bei gesundheitlichen Problemen oder Unsicherheit sollte fachlicher Rat eingeholt werden.
 
-Der Hitze-Modus setzt für die Berechnung mindestens 800 ml Flüssigkeit und 850 mg Natrium pro Stunde an. Die tatsächlichen Bedürfnisse können davon abweichen.
+Die App rechnet mit Kochsalz: 1 g Salz entspricht ungefähr 393 mg Natrium. Als persönliche Startwerte sind 500 mg Salz pro Stunde normal und 850 mg Salz pro Stunde im Hitze-Modus hinterlegt. Die tatsächlichen Bedürfnisse können davon abweichen.
+
+Für das reine Gel-Konzentrat aus Maltodextrin, Fruktose, Salz und Wasser rechnet die App mit 0,7 g beziehungsweise ungefähr 0,7 ml Wasser pro Gramm Kohlenhydrate. Die Wassermenge ist ein praxisorientierter Startwert für die Konsistenz und kann je nach Pulver, Temperatur und gewünschter Dosierbarkeit angepasst werden.
 
 ## Entwicklung
 
