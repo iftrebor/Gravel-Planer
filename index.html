@@ -91,6 +91,7 @@ details>summary{cursor:pointer;font-weight:700}
 .footer{text-align:center;padding-bottom:8px}
 .plan-desktop{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--space-4);align-items:start}
 .plan-desktop .left,.plan-desktop .right{display:grid;gap:var(--space-2);min-width:0}
+.plan-desktop .right,.plan-mobile > .kpis,.plan-mobile > .card{display:none}
 .plan-mobile{display:none}
 @media(max-width:640px){
   .plan-desktop{display:none}
@@ -678,6 +679,8 @@ function compute(){
   const summary = [
     'Flaschenmix: ' + (waterSecond ? '1× Drink + 1× Wasser' : '2× gemischter Drink'),
     'Gel-Konzentrat gesamt: ' + totalCarbDrink + ' g KH und ' + totalSalt.toFixed(1) + ' g Salz',
+    'Dosierung: ' + calculation.gelPerBottleMassG.toFixed(1) + ' g Gel je 800-ml-Trinkflasche',
+    'Squeeze-Flaschen: ' + calculation.gelPerSqueezeMl.toFixed(1) + ' ml je Flasche',
     'Drink je Stunde: ca. ' + drinkMlPerH + ' ml',
     'Wasser je Stunde: ca. ' + waterMlPerH + ' ml',
     'Refills: ' + (refillsNeeded > 0 ? refillsNeeded + ' einplanen' : 'nicht nötig'),
