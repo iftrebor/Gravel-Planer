@@ -31,7 +31,6 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 
-  // HTML should update when online and fall back to the cached app shell offline.
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request)

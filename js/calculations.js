@@ -16,7 +16,7 @@ export function clampNumber(value, min, max, fallback) {
 }
 
 export function parseRatio(value) {
-  const match = /^([1-9]\\d*):([1-9]\\d*)$/.exec(String(value));
+  const match = /^([1-9]\d*):([1-9]\d*)$/.exec(String(value));
   if (!match) return { f: 1 / 3, m: 2 / 3, label: '1:2' };
   const f = Number(match[1]);
   const m = Number(match[2]);
@@ -46,9 +46,9 @@ export function calculateTour(rawInput = {}) {
   const drinkShare = input.waterSecond ? 0.5 : 1;
   const drinkMlPerHour = Math.round(mlPerHour * drinkShare);
   const waterMlPerHour = Math.max(0, mlPerHour - drinkMlPerHour);
-  const drinkBottlesPerHour = drinkMlPerHour / input.bottleMl;
-  const carbPerBottle = input.carbPerHour / drinkBottlesPerHour;
-  const sodiumPerBottle = naPerHour / drinkBottlesPerHour;
+  const drinkBottlesPerHour = input.bottleMl > 0 ? drinkMlPerHour / input.bottleMl : 0;
+  const carbPerBottle = drinkBottlesPerHour > 0 ? input.carbPerHour / drinkBottlesPerHour : 0;
+  const sodiumPerBottle = drinkBottlesPerHour > 0 ? naPerHour / drinkBottlesPerHour : 0;
   const totalMl = Math.round(mlPerHour * duration);
   const totalDrinkMl = Math.round(drinkMlPerHour * duration);
   const totalWaterMl = totalMl - totalDrinkMl;
@@ -58,10 +58,22 @@ export function calculateTour(rawInput = {}) {
   const totalSodium = Math.round(naPerHour * duration);
 
   return {
-    input, duration, mlPerHour, naPerHour, drinkMlPerHour, waterMlPerHour,
-    carbPerBottle, sodiumPerBottle,
+    input,
+    duration,
+    mlPerHour,
+    naPerHour,
+    drinkMlPerHour,
+    waterMlPerHour,
+    carbPerBottle,
+    sodiumPerBottle,
     saltPerBottle: sodiumPerBottle / SODIUM_PER_GRAM_SALT,
-    totalMl, totalDrinkMl, totalWaterMl, totalBottleFills, refillsNeeded,
-    totalCarbs, totalSodium, totalSalt: totalSodium / SODIUM_PER_GRAM_SALT
+    totalMl,
+    totalDrinkMl,
+    totalWaterMl,
+    totalBottleFills,
+    refillsNeeded,
+    totalCarbs,
+    totalSodium,
+    totalSalt: totalSodium / SODIUM_PER_GRAM_SALT
   };
 }
