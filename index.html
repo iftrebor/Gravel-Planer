@@ -540,11 +540,14 @@ function buildSnackStrategy(hours, snickers, bananas){
 function formatHours(hours){
   return Number.isInteger(hours) ? String(hours) : hours.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
 }
+function formatLiters(ml){
+  return (ml / 1000).toFixed(1).replace('.', ',') + ' l';
+}
 function buildRefillStrategy(totalMl, bottleMl, duration){
   const startVolume = bottleMl * 2;
   const totalBottles = Math.max(1, Math.ceil(totalMl / bottleMl));
   const refillsNeeded = Math.max(0, totalBottles - 2);
-  const items = ['Mit 2 Flaschen starten: ' + startVolume + ' ml gemischter Drink.'];
+  const items = ['Mit 2 Flaschen starten: ' + formatLiters(startVolume) + ' gemischter Drink.'];
   if(totalMl <= startVolume){
     items.push('Für diese Tour ist voraussichtlich kein weiteres Nachfüllen nötig.');
   } else {
@@ -668,15 +671,15 @@ function compute(){
   const totalSalt = calculation.totalSalt;
   const refillsNeeded = calculation.refillsNeeded;
 
-  mirror(['kpiDuration','kpiDuration_m'], (Math.round(duration*4)/4).toFixed(2) + ' h');
-  mirror(['kpiDrink','kpiDrink_m'], totalMl + ' ml');
+  mirror(['kpiDuration','kpiDuration_m'], (Math.round(duration*4)/4).toFixed(1) + ' h');
+  mirror(['kpiDrink','kpiDrink_m'], formatLiters(totalMl));
   mirror(['kpiCarbs','kpiCarbs_m'], totalCarbDrink + ' g');
   mirror(['kpiSodium','kpiSodium_m'], totalSalt.toFixed(1) + ' g');
   mirror(['kpiCarbBottle','kpiCarbBottle_m'], Math.round(carbPerBottle) + ' g');
   mirror(['kpiCarbBottleSub','kpiCarbBottleSub_m'], Math.round(carbPerBottle*ratio.f) + ' g Fruktose + ' + Math.round(carbPerBottle*ratio.m) + ' g Malto');
-  mirror(['kpiSaltBottle','kpiSaltBottle_m'], (saltPerBottle / 1000).toFixed(2) + ' g');
+  mirror(['kpiSaltBottle','kpiSaltBottle_m'], (saltPerBottle / 1000).toFixed(1) + ' g');
   mirror(['kpiSaltBottleSub','kpiSaltBottleSub_m'], '≈ ' + Math.round(mgNaPerBottle) + ' mg Na pro Flasche');
-  mirror(['badgeSplit','badgeSplit_m'], '2× Drink · ' + drinkMlPerH + ' ml/h');
+  mirror(['badgeSplit','badgeSplit_m'], '2× Drink · ' + formatLiters(drinkMlPerH) + '/h');
   mirror(['badgeBottles','badgeBottles_m'], 'ca. ' + totalBottles + ' Flaschen gesamt');
   mirror(['badgeRefill','badgeRefill_m'], refillsNeeded > 0 ? ('+' + refillsNeeded + ' weitere Füllungen') : 'Kein weiteres Nachfüllen');
 
@@ -705,16 +708,16 @@ function compute(){
   ].map(x => '<li>'+x+'</li>').join('');
 
   document.getElementById('targets').innerHTML = [
-    '<b>Trinken:</b> ' + mlPerHour + ' ml/h gemischter Drink',
+    '<b>Trinken:</b> ' + formatLiters(mlPerHour) + '/h gemischter Drink',
     '<b>Salz:</b> ' + saltPerHour + ' mg/h <span class="muted">(≈ ' + Math.round(calculation.naPerHour) + ' mg Natrium/h)</span> · <b>KH:</b> ' + carbPerHour + ' g/h',
-    state.hotMode ? 'Hitze-Modus: mindestens 800 ml/h und 850 mg Salz/h.' : 'Hitze-Modus aus',
+    state.hotMode ? 'Hitze-Modus: mindestens 0,8 l/h und 850 mg Salz/h.' : 'Hitze-Modus aus',
     'Flaschen: 2× Gel-Mischung'
   ].map(x => '<li>'+x+'</li>').join('');
 
   document.getElementById('totals').innerHTML = [
-    '<b>Dauer:</b> ' + (Math.round(duration*4)/4).toFixed(2) + ' h',
-    '<b>Gesamttrinkmenge:</b> ' + totalMl + ' ml gemischter Drink',
-    '<b>Bikepacking:</b> ' + days + ' Tag' + (days === 1 ? '' : 'e') + ' · pro Tag ca. ' + calculation.dailyDistance.toFixed(1) + ' km, ' + calculation.dailyDuration.toFixed(2) + ' h, ' + calculation.dailyTotalMl + ' ml, ' + calculation.dailyTotalCarbs + ' g KH und ' + calculation.dailyTotalSalt.toFixed(2) + ' g Salz',
+    '<b>Dauer:</b> ' + (Math.round(duration*4)/4).toFixed(1) + ' h',
+    '<b>Gesamttrinkmenge:</b> ' + formatLiters(totalMl) + ' gemischter Drink',
+    '<b>Bikepacking:</b> ' + days + ' Tag' + (days === 1 ? '' : 'e') + ' · pro Tag ca. ' + calculation.dailyDistance.toFixed(1) + ' km, ' + calculation.dailyDuration.toFixed(1) + ' h, ' + formatLiters(calculation.dailyTotalMl) + ', ' + calculation.dailyTotalCarbs + ' g KH und ' + calculation.dailyTotalSalt.toFixed(1) + ' g Salz',
     '<b>Flaschen gesamt:</b> ' + totalBottles + ' × ' + bottleMl + ' ml',
     '<b>KH gesamt:</b> ~' + totalCarbDrink + ' g',
     '<b>Salz gesamt:</b> ~' + totalSalt.toFixed(1) + ' g <span class="muted">(≈ ' + totalNa + ' mg Natrium)</span>'
@@ -746,7 +749,7 @@ function compute(){
     const tr = el('tr');
     tr.appendChild(el('td','', formatHours(h)+'–'+formatHours(segmentEnd)+' h'));
     const tdDrink = el('td');
-    tdDrink.textContent = Math.round(mlPerHour * segmentHours) + ' ml gemischter Drink';
+    tdDrink.textContent = formatLiters(mlPerHour * segmentHours) + ' gemischter Drink';
     tr.appendChild(tdDrink);
     const eat = [];
     if(h===0) eat.push('nichts essen / sachte einrollen');
@@ -763,20 +766,20 @@ function compute(){
   }
 
   document.getElementById('sumDistance').textContent = state.distance + ' km';
-  document.getElementById('sumDuration').textContent = (Math.round(duration*4)/4).toFixed(2) + ' h';
-  document.getElementById('sumDrinkPerH').textContent = mlPerHour + ' ml';
+  document.getElementById('sumDuration').textContent = (Math.round(duration*4)/4).toFixed(1) + ' h';
+  document.getElementById('sumDrinkPerH').textContent = formatLiters(mlPerHour);
   document.getElementById('sumCarbPerH').textContent = carbPerHour + ' g';
 
   const summary = [
-    'Tour: ' + state.distance + ' km · ' + (Math.round(duration*4)/4).toFixed(2) + ' h · ' + days + ' Tag' + (days === 1 ? '' : 'e'),
-    'Gemischter Drink: ' + drinkMlPerH + ' ml/h · gesamt ' + totalMl + ' ml',
+    'Tour: ' + state.distance + ' km · ' + (Math.round(duration*4)/4).toFixed(1) + ' h · ' + days + ' Tag' + (days === 1 ? '' : 'e'),
+    'Gemischter Drink: ' + formatLiters(drinkMlPerH) + '/h · gesamt ' + formatLiters(totalMl),
     'Kohlenhydrate: ' + carbPerHour + ' g/h · gesamt ' + totalCarbDrink + ' g',
     'Salz: ' + saltPerHour + ' mg/h · gesamt ' + totalSalt.toFixed(1) + ' g',
     'Dosierung: ' + calculation.gelPerBottleMassG.toFixed(1) + ' g Gel je ' + bottleMl + '-ml-Trinkflasche',
     'Squeeze-Flaschen: ' + calculation.gelPerSqueezeMassG.toFixed(1) + ' g je Flasche',
     'Flaschenfüllungen: 2 starten · ' + (refillsNeeded > 0 ? refillsNeeded + ' weitere einplanen' : 'kein weiteres Nachfüllen nötig'),
     'Snacks: ' + snickers + '× Snickers und ' + bananas + '× Banane',
-    state.hotMode ? 'Hitze-Modus: mindestens 800 ml/h und 850 mg Salz/h' : 'Hitze-Modus aus'
+    state.hotMode ? 'Hitze-Modus: mindestens 0,8 l/h und 850 mg Salz/h' : 'Hitze-Modus aus'
   ];
   document.getElementById('summaryList').innerHTML = summary.map(x => '<li>'+x+'</li>').join('');
   document.getElementById('planSummaryList').innerHTML = summary.map(x => '<li>'+x+'</li>').join('');
