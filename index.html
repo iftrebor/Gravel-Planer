@@ -636,7 +636,7 @@ function compute(){
   ].map(x => '<li>'+x+'</li>').join('');
 
   const snickers = Math.max(1, Math.ceil(duration * 0.33));
-  const bananas = 1;
+  const bananas = Math.max(1, Math.ceil(duration / 3));
 
   document.getElementById('carry').innerHTML = [
     'Am Rad: 2× Trinkflasche mit Gel-Mischung',
