@@ -28,6 +28,10 @@ body{
   padding:calc(var(--space-3) + var(--safe-top)) var(--space-3) calc(88px + var(--safe-bottom));
   max-width:980px;margin-inline:auto
 }
+button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible{
+  outline:3px solid rgba(44,197,111,.7);
+  outline-offset:2px;
+}
 .topbar{position:sticky;top:0;z-index:20;background:rgba(11,15,20,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding-bottom:var(--space-2);margin-bottom:var(--space-3)}
 :root.light .topbar{background:rgba(245,247,251,.92)}
 .header{display:flex;gap:var(--space-3);align-items:center;padding-top:2px}
@@ -46,7 +50,7 @@ body{
 .btn.small{padding:10px 12px;min-height:42px;font-size:14px}
 .btn.preset-active{background:linear-gradient(180deg,var(--accent),#1b944f);color:#08210f;border-color:#177d43}
 .btn-help{display:block;font-weight:500;margin-top:4px;line-height:1.25}
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);background:rgba(11,15,20,.95);backdrop-filter:blur(12px);border-top:1px solid var(--border);padding-bottom:var(--safe-bottom)}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);background:rgba(11,15,20,.95);backdrop-filter:blur(12px);border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom,0px)}
 :root.light .tabs{background:rgba(245,247,251,.96)}
 .tabbtn{border:none;border-right:1px solid var(--border);background:transparent;padding:12px 6px 14px;font-weight:700;min-height:62px}
 .tabbtn:last-child{border-right:none}
@@ -140,17 +144,17 @@ details>summary{cursor:pointer;font-weight:700}
           <h3>Tourdaten</h3>
           <div class="row">
             <div class="field">
-              <label>Distanz (km) 🚴</label>
+              <label for="distance">Distanz (km) 🚴</label>
               <input type="number" id="distance" value="130" min="10" step="5">
               <div class="help">Typisch: 80–200 km</div>
             </div>
             <div class="field">
-              <label>Ø‑Geschwindigkeit (km/h) ⏱️</label>
+              <label for="speed">Ø‑Geschwindigkeit (km/h) ⏱️</label>
               <input type="number" id="speed" value="20" min="10" max="40" step="0.5">
               <div class="help">Typisch: 16–24 km/h</div>
             </div>
             <div class="field full">
-              <label class="pill"><input type="checkbox" id="hotMode"> <span>Hitze‑Modus ☀️</span></label>
+              <label class="pill" for="hotMode"><input type="checkbox" id="hotMode"> <span>Hitze‑Modus ☀️</span></label>
               <div class="help">Bei 25–30 °C oder starker Sonneneinstrahlung aktivieren.</div>
             </div>
           </div>
@@ -160,27 +164,27 @@ details>summary{cursor:pointer;font-weight:700}
           <h3>Hydration & Fueling</h3>
           <div class="row">
             <div class="field">
-              <label>Trinkmenge (ml/h) 💧</label>
+              <label for="mlPerHour">Trinkmenge (ml/h) 💧</label>
               <input type="number" id="mlPerHour" value="650" min="300" max="1200" step="10">
               <div class="help">Typisch: 600–800 ml/h</div>
             </div>
             <div class="field">
-              <label>Kohlenhydrate (g/h) 🍫</label>
+              <label for="carbPerHour">Kohlenhydrate (g/h) 🍫</label>
               <input type="number" id="carbPerHour" value="60" min="40" max="110" step="1">
               <div class="help">Typisch: 50–80 g/h</div>
             </div>
             <div class="field">
-              <label>Natrium‑Ziel (mg/h) 🧂</label>
+              <label for="naPerHour">Natrium‑Ziel (mg/h) 🧂</label>
               <input type="number" id="naPerHour" value="500" min="200" max="1500" step="25">
               <div class="help">Typisch: 400–800 mg/h</div>
             </div>
             <div class="field">
-              <label>Flaschengröße (ml) 🍼</label>
+              <label for="bottleMl">Flaschengröße (ml) 🍼</label>
               <input type="number" id="bottleMl" value="800" min="500" max="1000" step="50">
               <div class="help">Typisch: 750–850 ml</div>
             </div>
             <div class="field">
-              <label>Fruktose : Maltodextrin ⚗️</label>
+              <label for="ratio">Fruktose : Maltodextrin ⚗️</label>
               <select id="ratio">
                 <option value="1:1">1:1</option>
                 <option value="1:2" selected>1:2</option>
@@ -189,14 +193,14 @@ details>summary{cursor:pointer;font-weight:700}
               <div class="help">Standard: 1:2</div>
             </div>
             <div class="field">
-              <label class="pill"><input type="checkbox" id="waterSecond"> <span>2. Flasche = Wasser 🚰</span></label>
+              <label class="pill" for="waterSecond"><input type="checkbox" id="waterSecond"> <span>2. Flasche = Wasser 🚰</span></label>
               <div class="help">Standard: beide Flaschen mit gemischtem Drink.</div>
             </div>
           </div>
         </div>
 
         <div class="toolbar">
-          <button class="btn" id="suggestBtn">✨ Empfehlungen übernehmen<span class="btn-help">normal: 650 ml/h · 60 g/h · 500 mg/h · Flasche 800 ml · Verhältnis 1:2<br>Hitze: 800 ml/h · 60 g/h · 850 mg/h</span></button>
+          <button class="btn" id="suggestBtn">✨ Empfehlungen übernehmen<span class="btn-help">normal: 650 ml/h · 60 g/h · 500 mg/h · Flasche 800 ml · Verhältnis 1:2<br>Hitze: 800 ml/h · 60 g/h · 850 mg/h · Flasche 800 ml · Verhältnis 1:2</span></button>
           <button class="btn ghost" id="resetBtn">↺ Zurücksetzen</button>
           <button class="btn primary" id="calcBtn">🧮 Plan berechnen</button>
         </div>
@@ -230,7 +234,7 @@ details>summary{cursor:pointer;font-weight:700}
 
     <div class="plan-mobile">
       <div class="toolbar">
-        <button class="btn" id="suggestBtn_m">✨ Empfehlungen übernehmen<span class="btn-help">normal: 650 ml/h · 60 g/h · 500 mg/h · Flasche 800 ml · Verhältnis 1:2<br>Hitze: 800 ml/h · 60 g/h · 850 mg/h</span></button>
+        <button class="btn" id="suggestBtn_m">✨ Empfehlungen übernehmen<span class="btn-help">normal: 650 ml/h · 60 g/h · 500 mg/h · Flasche 800 ml · Verhältnis 1:2<br>Hitze: 800 ml/h · 60 g/h · 850 mg/h · Flasche 800 ml · Verhältnis 1:2</span></button>
         <button class="btn ghost" id="resetBtn_m">↺ Zurücksetzen</button>
         <button class="btn primary" id="calcBtn_m">🧮 Plan berechnen</button>
       </div>
@@ -240,17 +244,17 @@ details>summary{cursor:pointer;font-weight:700}
           <h3>Tourdaten</h3>
           <div class="row">
             <div class="field">
-              <label>Distanz (km) 🚴</label>
+              <label for="distance_m">Distanz (km) 🚴</label>
               <input type="number" id="distance_m" value="130" min="10" step="5">
               <div class="help">Typisch: 80–200 km</div>
             </div>
             <div class="field">
-              <label>Ø‑Geschwindigkeit (km/h) ⏱️</label>
+              <label for="speed_m">Ø‑Geschwindigkeit (km/h) ⏱️</label>
               <input type="number" id="speed_m" value="20" min="10" max="40" step="0.5">
               <div class="help">Typisch: 16–24 km/h</div>
             </div>
             <div class="field full">
-              <label class="pill"><input type="checkbox" id="hotMode_m"> <span>Hitze‑Modus ☀️</span></label>
+              <label class="pill" for="hotMode_m"><input type="checkbox" id="hotMode_m"> <span>Hitze‑Modus ☀️</span></label>
               <div class="help">Bei 25–30 °C oder starker Sonneneinstrahlung aktivieren.</div>
             </div>
           </div>
@@ -260,27 +264,27 @@ details>summary{cursor:pointer;font-weight:700}
           <h3>Hydration & Fueling</h3>
           <div class="row">
             <div class="field">
-              <label>Trinkmenge (ml/h) 💧</label>
+              <label for="mlPerHour_m">Trinkmenge (ml/h) 💧</label>
               <input type="number" id="mlPerHour_m" value="650" min="300" max="1200" step="10">
               <div class="help">Typisch: 600–800 ml/h</div>
             </div>
             <div class="field">
-              <label>Kohlenhydrate (g/h) 🍫</label>
+              <label for="carbPerHour_m">Kohlenhydrate (g/h) 🍫</label>
               <input type="number" id="carbPerHour_m" value="60" min="40" max="110" step="1">
               <div class="help">Typisch: 50–80 g/h</div>
             </div>
             <div class="field">
-              <label>Natrium‑Ziel (mg/h) 🧂</label>
+              <label for="naPerHour_m">Natrium‑Ziel (mg/h) 🧂</label>
               <input type="number" id="naPerHour_m" value="500" min="200" max="1500" step="25">
               <div class="help">Typisch: 400–800 mg/h</div>
             </div>
             <div class="field">
-              <label>Flaschengröße (ml) 🍼</label>
+              <label for="bottleMl_m">Flaschengröße (ml) 🍼</label>
               <input type="number" id="bottleMl_m" value="800" min="500" max="1000" step="50">
               <div class="help">Typisch: 750–850 ml</div>
             </div>
             <div class="field">
-              <label>Fruktose : Maltodextrin ⚗️</label>
+              <label for="ratio_m">Fruktose : Maltodextrin ⚗️</label>
               <select id="ratio_m">
                 <option value="1:1">1:1</option>
                 <option value="1:2" selected>1:2</option>
@@ -289,7 +293,7 @@ details>summary{cursor:pointer;font-weight:700}
               <div class="help">Standard: 1:2</div>
             </div>
             <div class="field">
-              <label class="pill"><input type="checkbox" id="waterSecond_m"> <span>2. Flasche = Wasser 🚰</span></label>
+              <label class="pill" for="waterSecond_m"><input type="checkbox" id="waterSecond_m"> <span>2. Flasche = Wasser 🚰</span></label>
               <div class="help">Standard: beide Flaschen mit gemischtem Drink.</div>
             </div>
           </div>
@@ -362,19 +366,21 @@ details>summary{cursor:pointer;font-weight:700}
   </section>
 </main>
 
-<div class="tabs">
-  <button class="tabbtn active" data-tab="tab-plan">Plan</button>
-  <button class="tabbtn" data-tab="tab-food">Verpflegung</button>
-  <button class="tabbtn" data-tab="tab-checklist">Packliste</button>
-  <button class="tabbtn" data-tab="tab-summary">Kurzansicht</button>
+<div class="tabs" role="tablist" aria-label="Navigationsbereich">
+  <button class="tabbtn active" data-tab="tab-plan" role="tab" aria-selected="true" aria-controls="tab-plan">Plan</button>
+  <button class="tabbtn" data-tab="tab-food" role="tab" aria-selected="false" aria-controls="tab-food">Verpflegung</button>
+  <button class="tabbtn" data-tab="tab-checklist" role="tab" aria-selected="false" aria-controls="tab-checklist">Packliste</button>
+  <button class="tabbtn" data-tab="tab-summary" role="tab" aria-selected="false" aria-controls="tab-summary">Kurzansicht</button>
 </div>
 
-<script>
+<script type="module">
+import { calculateTour, normalizeInput, parseRatio } from './js/calculations.js';
+
 const SODIUM_PER_GRAM_SALT = 393;
 const STATE_KEY = 'gravel_plan_state_v61';
 const THEME_KEY = 'gravel_plan_theme_v61';
 const toolData = {
-  tools:['Multitool (mit Kettennieter)','Minipumpe oder CO₂ + 2 Kartuschen + Adapter','2 Reifenheber','Flickzeug oder Tubeless‑Plugs','1–2 Ersatzschläuche (passendes Ventil)','Kettenschloss (Missing Link)','Fahrradschloss (leicht)','Kabelbinder + 1 m Gewebetape','Mini‑Kettenöl / Tuch','Speichenschlüssel (optional)'],
+  tools:['Multitool (mit Kettennieter)','Minipumpe oder CO₂ + 2 Kartuschen + Adapter','2 Reifenheber','Flickzeug oder Tubeless‑Plugs','1–2 Ersatzschläuche (passendes Ventil)','Kettenschloss / Kettenheber','Kettenspray','2 Schlauchadapter','2 Ersatzschläuche (passendes Ventil)'],
   safety:['Frontlicht (geladen)','Rücklicht (geladen)','Reflektor‑Band / Clip','Erste‑Hilfe‑Set (Pflaster, Blasenpflaster, Kompresse)','Rettungsdecke'],
   food:['Trinkflaschen','Gel-/Konzentratflasche zum Dosieren','Aroma / Sirup für das Gel','Reserve‑Riegel (~300 kcal)','Kleiner Müllbeutel','Wasserfilter'],
   nav:['Handy + Offline‑Karten','Powerbank + Kabel','EC‑Karte / Bargeld','Ausweis + Krankenkassenkarte'],
@@ -397,7 +403,11 @@ function isMobile(){ return window.matchMedia('(max-width: 640px)').matches; }
 function el(tag, cls, text){ const e=document.createElement(tag); if(cls) e.className=cls; if(text!==undefined) e.textContent=text; return e; }
 function switchTab(tabId){
   document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === tabId));
-  document.querySelectorAll('.tabbtn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+  document.querySelectorAll('.tabbtn').forEach(b => {
+    const active = b.dataset.tab === tabId;
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-selected', String(active));
+  });
   localStorage.setItem('gravel_plan_v61_tab', tabId);
   window.scrollTo({top:0, behavior:'smooth'});
 }
@@ -417,10 +427,11 @@ function restoreTheme(){
 }
 
 function setVal(key, value){
-  inputMap[key].forEach(id => {
+  const ids = inputMap[key] || [];
+  ids.forEach(id => {
     const node = document.getElementById(id);
     if(!node) return;
-    if(node.type === 'checkbox') node.checked = !!value;
+    if(node.type === 'checkbox') node.checked = Boolean(value);
     else node.value = value;
   });
 }
@@ -434,16 +445,15 @@ function syncInputs(changedId){
   for(const [key, ids] of Object.entries(inputMap)){
     if(ids.includes(changedId)){
       const src = document.getElementById(changedId);
-      const value = src.type === 'checkbox' ? src.checked : src.value;
+      const value = src && src.type === 'checkbox' ? src.checked : src.value;
       setVal(key, value);
       return;
     }
   }
 }
 function ratioParts(){
-  const parts = String(getVal('ratio')).split(':').map(Number);
-  const sum = parts[0] + parts[1];
-  return {f:parts[0]/sum, m:parts[1]/sum, label:String(getVal('ratio'))};
+  const safe = parseRatio(getVal('ratio'));
+  return { f: safe.f, m: safe.m, label: safe.label };
 }
 function mirror(ids, value){
   ids.forEach(id => {
@@ -452,7 +462,7 @@ function mirror(ids, value){
   });
 }
 function updatePresetButtons(){
-  const distance = Number(getVal('distance'));
+  const distance = Number(getVal('distance')) || 0;
   const presets = {preset100:100,preset130:130,preset170:170,preset200:200};
   Object.entries(presets).forEach(([id,val]) => {
     const btn = document.getElementById(id);
@@ -520,35 +530,54 @@ function buildPackLogic(duration, hotMode, totalMl, refillsNeeded){
   return items;
 }
 
-function compute(){
-  const distance = parseFloat(getVal('distance') || 0);
-  const speed = parseFloat(getVal('speed') || 0);
-  const hotMode = !!getVal('hotMode');
-  const baseMlPerHour = parseFloat(getVal('mlPerHour') || 0);
-  const baseCarbPerHour = parseFloat(getVal('carbPerHour') || 0);
-  const baseNaPerHour = parseFloat(getVal('naPerHour') || 0);
-  const mlPerHour = hotMode ? Math.max(baseMlPerHour, 800) : baseMlPerHour;
-  const carbPerHour = baseCarbPerHour;
-  const naPerHour = hotMode ? Math.max(baseNaPerHour, 850) : baseNaPerHour;
-  const bottleMl = parseFloat(getVal('bottleMl') || 0);
-  const waterSecond = !!getVal('waterSecond');
-  const ratio = ratioParts();
+function readFormState(){
+  const state = normalizeInput({
+    distance: getVal('distance'),
+    speed: getVal('speed'),
+    hotMode: getVal('hotMode'),
+    mlPerHour: getVal('mlPerHour'),
+    carbPerHour: getVal('carbPerHour'),
+    naPerHour: getVal('naPerHour'),
+    bottleMl: getVal('bottleMl'),
+    ratio: getVal('ratio'),
+    waterSecond: getVal('waterSecond')
+  });
+  return state;
+}
 
-  const duration = (distance > 0 && speed > 0) ? (distance / speed) : 0;
-  const drinkShare = waterSecond ? 0.5 : 1.0;
-  const drinkMlPerH = Math.round(mlPerHour * drinkShare);
-  const waterMlPerH = Math.max(0, Math.round(mlPerHour - drinkMlPerH));
-  const drinkBottlesPerHour = bottleMl > 0 ? (drinkMlPerH / bottleMl) : 0;
-  const carbPerBottle = drinkBottlesPerHour > 0 ? (carbPerHour / drinkBottlesPerHour) : 0;
-  const mgNaPerBottle = drinkBottlesPerHour > 0 ? (naPerHour / drinkBottlesPerHour) : 0;
-  const saltPerBottle = mgNaPerBottle / 393;
-  const totalMl = Math.round(mlPerHour * duration);
-  const totalDrinkMl = Math.round(drinkMlPerH * duration);
-  const totalWaterMl = Math.max(0, totalMl - totalDrinkMl);
-  const totalBottles = bottleMl > 0 ? Math.ceil(totalMl / bottleMl) : 0;
-  const totalCarbDrink = Math.round(carbPerHour * duration);
-  const totalNa = Math.round(naPerHour * duration);
-  const refillsNeeded = Math.max(0, Math.ceil((totalMl - bottleMl * 2) / bottleMl));
+function compute(){
+  const state = readFormState();
+  const ratio = state.ratio;
+  const calculation = calculateTour({
+    distance: state.distance,
+    speed: state.speed,
+    hotMode: state.hotMode,
+    mlPerHour: state.mlPerHour,
+    carbPerHour: state.carbPerHour,
+    naPerHour: state.naPerHour,
+    bottleMl: state.bottleMl,
+    ratio: ratio.label,
+    waterSecond: state.waterSecond
+  });
+
+  const duration = calculation.duration;
+  const mlPerHour = calculation.mlPerHour;
+  const carbPerHour = state.carbPerHour;
+  const naPerHour = calculation.naPerHour;
+  const bottleMl = state.bottleMl;
+  const waterSecond = state.waterSecond;
+  const drinkMlPerH = calculation.drinkMlPerHour;
+  const waterMlPerH = calculation.waterMlPerHour;
+  const carbPerBottle = calculation.carbPerBottle;
+  const mgNaPerBottle = calculation.sodiumPerBottle;
+  const saltPerBottle = calculation.saltPerBottle;
+  const totalMl = calculation.totalMl;
+  const totalDrinkMl = calculation.totalDrinkMl;
+  const totalWaterMl = calculation.totalWaterMl;
+  const totalBottles = calculation.totalBottleFills;
+  const totalCarbDrink = calculation.totalCarbs;
+  const totalNa = calculation.totalSodium;
+  const refillsNeeded = calculation.refillsNeeded;
 
   mirror(['kpiDuration','kpiDuration_m'], (Math.round(duration*4)/4).toFixed(2) + ' h');
   mirror(['kpiDrink','kpiDrink_m'], totalMl + ' ml');
@@ -566,7 +595,6 @@ function compute(){
   const totalMalto = Math.round(totalCarbDrink * ratio.m);
   const totalFructose = Math.round(totalCarbDrink * ratio.f);
   const totalSalt = totalNa / SODIUM_PER_GRAM_SALT;
-  const concentrateDosePerBottleMl = mixedDrinkBottles > 0 ? Math.round(totalDrinkMl / mixedDrinkBottles * 0.15) : 0;
 
   document.getElementById('gelMixList').innerHTML = [
     totalMalto + ' g Maltodextrin',
@@ -589,7 +617,7 @@ function compute(){
   document.getElementById('targets').innerHTML = [
     '<b>Trinken:</b> ' + mlPerHour + ' ml/h <span class="muted">(Drink ~' + drinkMlPerH + ' · Wasser ~' + waterMlPerH + ')</span>',
     '<b>KH:</b> ' + carbPerHour + ' g/h · <b>Na:</b> ' + naPerHour + ' mg/h',
-    hotMode ? 'Hitze-Modus aktiv: Berechnung mindestens mit 800 ml/h und 850 mg/h – KH bleiben unverändert' : 'Hitze-Modus aus: Berechnung folgt exakt deinen Eingabewerten',
+    state.hotMode ? 'Hitze-Modus aktiv: Berechnung mindestens mit 800 ml/h und 850 mg/h – KH bleiben unverändert' : 'Hitze-Modus aus: Berechnung folgt exakt deinen Eingabewerten',
     waterSecond ? '2. Flasche: Wasser' : '2. Flasche: ebenfalls Drink'
   ].map(x => '<li>'+x+'</li>').join('');
 
@@ -617,7 +645,7 @@ function compute(){
 
   document.getElementById('snackStrategy').innerHTML = buildSnackStrategy(Math.max(1, Math.ceil(duration)), snickers, bananas, extCarb).map(x => '<li>'+x+'</li>').join('');
   document.getElementById('refillStrategy').innerHTML = buildRefillStrategy(totalMl, bottleMl, waterSecond, duration).map(x => '<li>'+x+'</li>').join('');
-  document.getElementById('packLogic').innerHTML = buildPackLogic(duration, hotMode, totalMl, refillsNeeded).map(x => '<li>'+x+'</li>').join('');
+  document.getElementById('packLogic').innerHTML = buildPackLogic(duration, state.hotMode, totalMl, refillsNeeded).map(x => '<li>'+x+'</li>').join('');
 
   const tbody = document.getElementById('scheduleBody');
   tbody.innerHTML = '';
@@ -643,7 +671,7 @@ function compute(){
     tbody.appendChild(tr);
   }
 
-  document.getElementById('sumDistance').textContent = distance + ' km';
+  document.getElementById('sumDistance').textContent = state.distance + ' km';
   document.getElementById('sumDuration').textContent = (Math.round(duration*4)/4).toFixed(2) + ' h';
   document.getElementById('sumDrinkPerH').textContent = mlPerHour + ' ml';
   document.getElementById('sumCarbPerH').textContent = carbPerHour + ' g';
@@ -655,7 +683,7 @@ function compute(){
     'Wasser je Stunde: ca. ' + waterMlPerH + ' ml',
     'Refills: ' + (refillsNeeded > 0 ? refillsNeeded + ' einplanen' : 'nicht nötig'),
     'Snacks: ' + snickers + '× Snickers, ' + bananas + '× Banane, ' + extCarb + '× weitere KH-Portion',
-    hotMode ? 'Hitze-Modus aktiv: mehr Wasser und Natrium berücksichtigt, KH bleiben konstant' : 'Hitze-Modus aus' 
+    state.hotMode ? 'Hitze-Modus aktiv: mehr Wasser und Natrium berücksichtigt, KH bleiben konstant' : 'Hitze-Modus aus'
   ];
   document.getElementById('summaryList').innerHTML = summary.map(x => '<li>'+x+'</li>').join('');
   document.getElementById('planSummaryList').innerHTML = summary.map(x => '<li>'+x+'</li>').join('');
@@ -664,7 +692,15 @@ function compute(){
   updatePresetButtons();
 
   localStorage.setItem(STATE_KEY, JSON.stringify({
-    distance, speed, hotMode, mlPerHour, carbPerHour, naPerHour, bottleMl, ratio: ratio.label, waterSecond
+    distance: state.distance,
+    speed: state.speed,
+    hotMode: state.hotMode,
+    mlPerHour: state.mlPerHour,
+    carbPerHour: state.carbPerHour,
+    naPerHour: state.naPerHour,
+    bottleMl: state.bottleMl,
+    ratio: ratio.label,
+    waterSecond: state.waterSecond
   }));
 }
 
@@ -673,9 +709,14 @@ function restoreFormState(){
   if(!raw) return;
   try{
     const obj = JSON.parse(raw);
-    Object.entries(obj).forEach(([k,v]) => { if(inputMap[k]) setVal(k,v); });
-  }catch(e){}
+    Object.entries(obj).forEach(([key,val]) => {
+      if(inputMap[key]) setVal(key, val);
+    });
+  }catch(e){
+    console.warn('Saved state could not be restored.', e);
+  }
 }
+
 function buildChecklist(){
   const buckets = [['c_tools','tools'],['c_safety','safety'],['c_food','food'],['c_nav','nav'],['c_clothes','clothes'],['c_hygiene','hygiene']];
   for(const [id,key] of buckets){
@@ -696,6 +737,7 @@ function buildChecklist(){
     });
   }
 }
+
 async function exportPdf(){
   if(!window.html2pdf){
     try{
