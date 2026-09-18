@@ -71,8 +71,9 @@ export function calculateTour(rawInput = {}) {
   const initialGelBottleCount = Math.min(2, mixedDrinkBottleCount);
   const squeezeGelMassG = Math.max(0, gelConcentrateMassG - initialGelBottleCount * gelPerBottleMassG);
   const squeezeCapacityMl = 500;
-  const gelPerSqueezeMl = Math.round(Math.min(squeezeCapacityMl / 2, squeezeGelMassG / GEL_DENSITY_G_PER_ML / 2) * 10) / 10;
-  const extraGelVesselMl = Math.max(0, squeezeGelMassG / GEL_DENSITY_G_PER_ML - squeezeCapacityMl);
+  const squeezeCapacityMassG = squeezeCapacityMl * GEL_DENSITY_G_PER_ML;
+  const gelPerSqueezeMassG = Math.round(Math.min(squeezeCapacityMassG / 2, squeezeGelMassG / 2) * 10) / 10;
+  const extraGelVesselMassG = Math.max(0, squeezeGelMassG - squeezeCapacityMassG);
 
   return {
     input,
@@ -98,8 +99,9 @@ export function calculateTour(rawInput = {}) {
     gelPerBottleMassG,
     squeezeGelMassG,
     squeezeCapacityMl,
-    gelPerSqueezeMl,
-    extraGelVesselMl,
+    squeezeCapacityMassG,
+    gelPerSqueezeMassG,
+    extraGelVesselMassG,
     totalSalt: totalSodium / SODIUM_PER_MG_SALT / 1000
   };
 }
