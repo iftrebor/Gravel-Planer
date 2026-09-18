@@ -774,11 +774,6 @@ function compute(){
     'Gemischter Drink: ' + formatLiters(drinkMlPerH) + '/h · gesamt ' + formatLiters(totalMl),
     'Kohlenhydrate: ' + carbPerHour + ' g/h · gesamt ' + totalCarbDrink + ' g',
     'Salz: ' + saltPerHour + ' mg/h · gesamt ' + totalSalt.toFixed(1) + ' g',
-    'Flaschen gesamt: ' + totalBottles + ' × ' + bottleMl + ' ml',
-    'Dosierung: ' + calculation.gelPerBottleMassG.toFixed(1) + ' g Gel je ' + bottleMl + '-ml-Trinkflasche',
-    'Squeeze-Flaschen: ' + calculation.gelPerSqueezeMassG.toFixed(1) + ' g je Flasche',
-    'Flaschenfüllungen: 2 starten · ' + (refillsNeeded > 0 ? refillsNeeded + ' weitere einplanen' : 'kein weiteres Nachfüllen nötig'),
-    'Snacks: ' + snickers + '× Snickers und ' + bananas + '× Banane',
     state.hotMode ? 'Hitze-Modus: mindestens 0,8 l/h und 850 mg Salz/h' : 'Hitze-Modus aus'
   ];
   document.getElementById('summaryList').innerHTML = summary.map(x => '<li>'+x+'</li>').join('');
