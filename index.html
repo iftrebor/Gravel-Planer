@@ -157,12 +157,21 @@ details>summary{cursor:pointer;font-weight:700}
             </div>
             <div class="field">
               <label for="speed">Ø‑Geschwindigkeit (km/h) ⏱️</label>
-              <input type="number" id="speed" inputmode="decimal" value="20" min="10" max="40" step="0.5">
+              <select id="speed">
+                <option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option>
+                <option>16</option><option>17</option><option>18</option><option>19</option><option selected>20</option><option>21</option>
+                <option>22</option><option>23</option><option>24</option><option>25</option><option>26</option><option>27</option>
+                <option>28</option><option>29</option><option>30</option><option>31</option><option>32</option><option>33</option>
+                <option>34</option><option>35</option><option>36</option><option>37</option><option>38</option><option>39</option><option>40</option>
+              </select>
               <div class="help">Typisch: 16–24 km/h</div>
             </div>
             <div class="field">
               <label for="days">Bikepacking-Tage 🏕️</label>
-              <input type="number" id="days" inputmode="numeric" value="1" min="1" max="14" step="1">
+              <select id="days">
+                <option selected>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option>
+                <option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option>
+              </select>
               <div class="help">Gesamttour gleichmäßig auf mehrere Tage verteilen.</div>
             </div>
             <div class="field full">
@@ -177,22 +186,35 @@ details>summary{cursor:pointer;font-weight:700}
           <div class="row">
             <div class="field">
               <label for="mlPerHour">Trinkmenge (ml/h) 💧</label>
-              <input type="number" id="mlPerHour" inputmode="numeric" value="650" min="300" max="1200" step="10">
+              <select id="mlPerHour">
+                <option>300</option><option>350</option><option>400</option><option>450</option><option>500</option><option>550</option>
+                <option>600</option><option selected>650</option><option>700</option><option>750</option><option>800</option><option>850</option>
+                <option>900</option><option>950</option><option>1000</option><option>1050</option><option>1100</option><option>1150</option><option>1200</option>
+              </select>
               <div class="help">Typisch: 600–800 ml/h</div>
             </div>
             <div class="field">
               <label for="carbPerHour">Kohlenhydrate (g/h) 🍫</label>
-              <input type="number" id="carbPerHour" inputmode="numeric" value="60" min="40" max="110" step="1">
+              <select id="carbPerHour">
+                <option>40</option><option>45</option><option>50</option><option>55</option><option selected>60</option><option>65</option><option>70</option>
+                <option>75</option><option>80</option><option>85</option><option>90</option><option>95</option><option>100</option><option>105</option><option>110</option>
+              </select>
               <div class="help">Typisch: 50–80 g/h</div>
             </div>
             <div class="field">
               <label for="saltPerHour">Salz-Ziel (mg/h) 🧂</label>
-              <input type="number" id="saltPerHour" inputmode="numeric" value="500" min="200" max="1500" step="25">
+              <select id="saltPerHour">
+                <option>200</option><option>300</option><option>400</option><option selected>500</option><option>600</option><option>700</option><option>800</option>
+                <option>900</option><option>1000</option><option>1100</option><option>1200</option><option>1300</option><option>1400</option><option>1500</option>
+              </select>
               <div class="help">1 g Salz enthält ca. 393 mg Natrium · Startwert: 500 mg Salz/h</div>
             </div>
             <div class="field">
               <label for="bottleMl">Flaschengröße (ml) 🍼</label>
-              <input type="number" id="bottleMl" inputmode="numeric" value="800" min="500" max="1000" step="50">
+              <select id="bottleMl">
+                <option>500</option><option>550</option><option>600</option><option>650</option><option>700</option><option>750</option>
+                <option selected>800</option><option>850</option><option>900</option><option>950</option><option>1000</option>
+              </select>
               <div class="help">Typisch: 750–850 ml</div>
             </div>
             <div class="field">
@@ -258,12 +280,21 @@ details>summary{cursor:pointer;font-weight:700}
             </div>
             <div class="field">
               <label for="speed_m">Ø‑Geschwindigkeit (km/h) ⏱️</label>
-              <input type="number" id="speed_m" inputmode="decimal" value="20" min="10" max="40" step="0.5">
+              <select id="speed_m">
+                <option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option>
+                <option>16</option><option>17</option><option>18</option><option>19</option><option selected>20</option><option>21</option>
+                <option>22</option><option>23</option><option>24</option><option>25</option><option>26</option><option>27</option>
+                <option>28</option><option>29</option><option>30</option><option>31</option><option>32</option><option>33</option>
+                <option>34</option><option>35</option><option>36</option><option>37</option><option>38</option><option>39</option><option>40</option>
+              </select>
               <div class="help">Typisch: 16–24 km/h</div>
             </div>
             <div class="field">
               <label for="days_m">Bikepacking-Tage 🏕️</label>
-              <input type="number" id="days_m" inputmode="numeric" value="1" min="1" max="14" step="1">
+              <select id="days_m">
+                <option selected>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option>
+                <option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option>
+              </select>
               <div class="help">Gesamttour gleichmäßig auf mehrere Tage verteilen.</div>
             </div>
             <div class="field full">
@@ -278,22 +309,35 @@ details>summary{cursor:pointer;font-weight:700}
           <div class="row">
             <div class="field">
               <label for="mlPerHour_m">Trinkmenge (ml/h) 💧</label>
-              <input type="number" id="mlPerHour_m" inputmode="numeric" value="650" min="300" max="1200" step="10">
+              <select id="mlPerHour_m">
+                <option>300</option><option>350</option><option>400</option><option>450</option><option>500</option><option>550</option>
+                <option>600</option><option selected>650</option><option>700</option><option>750</option><option>800</option><option>850</option>
+                <option>900</option><option>950</option><option>1000</option><option>1050</option><option>1100</option><option>1150</option><option>1200</option>
+              </select>
               <div class="help">Typisch: 600–800 ml/h</div>
             </div>
             <div class="field">
               <label for="carbPerHour_m">Kohlenhydrate (g/h) 🍫</label>
-              <input type="number" id="carbPerHour_m" inputmode="numeric" value="60" min="40" max="110" step="1">
+              <select id="carbPerHour_m">
+                <option>40</option><option>45</option><option>50</option><option>55</option><option selected>60</option><option>65</option><option>70</option>
+                <option>75</option><option>80</option><option>85</option><option>90</option><option>95</option><option>100</option><option>105</option><option>110</option>
+              </select>
               <div class="help">Typisch: 50–80 g/h</div>
             </div>
             <div class="field">
               <label for="saltPerHour_m">Salz-Ziel (mg/h) 🧂</label>
-              <input type="number" id="saltPerHour_m" inputmode="numeric" value="500" min="200" max="1500" step="25">
+              <select id="saltPerHour_m">
+                <option>200</option><option>300</option><option>400</option><option selected>500</option><option>600</option><option>700</option><option>800</option>
+                <option>900</option><option>1000</option><option>1100</option><option>1200</option><option>1300</option><option>1400</option><option>1500</option>
+              </select>
               <div class="help">1 g Salz enthält ca. 393 mg Natrium · Startwert: 500 mg Salz/h</div>
             </div>
             <div class="field">
               <label for="bottleMl_m">Flaschengröße (ml) 🍼</label>
-              <input type="number" id="bottleMl_m" inputmode="numeric" value="800" min="500" max="1000" step="50">
+              <select id="bottleMl_m">
+                <option>500</option><option>550</option><option>600</option><option>650</option><option>700</option><option>750</option>
+                <option selected>800</option><option>850</option><option>900</option><option>950</option><option>1000</option>
+              </select>
               <div class="help">Typisch: 750–850 ml</div>
             </div>
             <div class="field">
