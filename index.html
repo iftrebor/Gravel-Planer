@@ -593,7 +593,7 @@ function compute(){
   const mixedDrinkBottles = bottleMl > 0 ? (totalDrinkMl / bottleMl) : 0;
   const totalMalto = Math.round(totalCarbDrink * ratio.m);
   const totalFructose = Math.round(totalCarbDrink * ratio.f);
-  const totalSalt = totalNa / SODIUM_PER_GRAM_SALT * 1000;
+  const totalSalt = calculation.totalSalt;
 
   document.getElementById('gelMixList').innerHTML = [
     totalMalto + ' g Maltodextrin',
