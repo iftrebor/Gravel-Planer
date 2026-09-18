@@ -154,6 +154,11 @@ details>summary{cursor:pointer;font-weight:700}
               <input type="number" id="speed" value="20" min="10" max="40" step="0.5">
               <div class="help">Typisch: 16–24 km/h</div>
             </div>
+            <div class="field">
+              <label for="days">Bikepacking-Tage 🏕️</label>
+              <input type="number" id="days" value="1" min="1" max="14" step="1">
+              <div class="help">Gesamttour gleichmäßig auf mehrere Tage verteilen.</div>
+            </div>
             <div class="field full">
               <label class="pill" for="hotMode"><input type="checkbox" id="hotMode"> <span>Hitze‑Modus ☀️</span></label>
               <div class="help">Bei 25–30 °C oder starker Sonneneinstrahlung aktivieren.</div>
@@ -253,6 +258,11 @@ details>summary{cursor:pointer;font-weight:700}
               <label for="speed_m">Ø‑Geschwindigkeit (km/h) ⏱️</label>
               <input type="number" id="speed_m" value="20" min="10" max="40" step="0.5">
               <div class="help">Typisch: 16–24 km/h</div>
+            </div>
+            <div class="field">
+              <label for="days_m">Bikepacking-Tage 🏕️</label>
+              <input type="number" id="days_m" value="1" min="1" max="14" step="1">
+              <div class="help">Gesamttour gleichmäßig auf mehrere Tage verteilen.</div>
             </div>
             <div class="field full">
               <label class="pill" for="hotMode_m"><input type="checkbox" id="hotMode_m"> <span>Hitze‑Modus ☀️</span></label>
@@ -390,6 +400,7 @@ const toolData = {
 };
 const inputMap = {
   distance:['distance','distance_m'],
+  days:['days','days_m'],
   speed:['speed','speed_m'],
   hotMode:['hotMode','hotMode_m'],
   mlPerHour:['mlPerHour','mlPerHour_m'],
@@ -490,6 +501,7 @@ function resetInputs(){
   localStorage.removeItem(STATE_KEY);
   setVal('distance', 130);
   setVal('speed', 20);
+  setVal('days', 1);
   setVal('hotMode', false);
   setVal('mlPerHour', 650);
   setVal('carbPerHour', 60);
@@ -533,6 +545,7 @@ function buildPackLogic(duration, hotMode, totalMl, refillsNeeded){
 function readFormState(){
   const state = normalizeInput({
     distance: getVal('distance'),
+    days: getVal('days'),
     speed: getVal('speed'),
     hotMode: getVal('hotMode'),
     mlPerHour: getVal('mlPerHour'),
@@ -557,10 +570,12 @@ function compute(){
     saltPerHour: state.saltPerHour,
     bottleMl: state.bottleMl,
     ratio: ratio.label,
-    waterSecond: state.waterSecond
+    waterSecond: state.waterSecond,
+    days: state.days
   });
 
   const duration = calculation.duration;
+  const days = state.days;
   const mlPerHour = calculation.mlPerHour;
   const carbPerHour = state.carbPerHour;
   const saltPerHour = calculation.saltPerHour;
@@ -627,6 +642,7 @@ function compute(){
   document.getElementById('totals').innerHTML = [
     '<b>Dauer:</b> ' + (Math.round(duration*4)/4).toFixed(2) + ' h',
     '<b>Gesamttrinkmenge:</b> ' + totalMl + ' ml (Drink ' + totalDrinkMl + ' / Wasser ' + totalWaterMl + ')',
+    '<b>Bikepacking:</b> ' + days + ' Tag' + (days === 1 ? '' : 'e') + ' · pro Tag ca. ' + calculation.dailyDistance.toFixed(1) + ' km, ' + calculation.dailyDuration.toFixed(2) + ' h, ' + calculation.dailyTotalMl + ' ml, ' + calculation.dailyTotalCarbs + ' g KH und ' + calculation.dailyTotalSalt.toFixed(2) + ' g Salz',
     '<b>Flaschen gesamt:</b> ' + totalBottles + ' × ' + bottleMl + ' ml',
     '<b>KH über Drink (Ziel):</b> ~' + totalCarbDrink + ' g',
     '<b>Natrium gesamt (Ziel):</b> ~' + totalNa + ' mg'
@@ -679,6 +695,7 @@ function compute(){
   const summary = [
     'Flaschenmix: ' + (waterSecond ? '1× Drink + 1× Wasser' : '2× gemischter Drink'),
     'Gel-Konzentrat gesamt: ' + totalCarbDrink + ' g KH und ' + totalSalt.toFixed(1) + ' g Salz',
+    'Bikepacking: ' + days + ' Tag' + (days === 1 ? '' : 'e') + ' · pro Tag ca. ' + calculation.dailyDistance.toFixed(1) + ' km, ' + calculation.dailyTotalCarbs + ' g KH und ' + calculation.dailyTotalMl + ' ml',
     'Dosierung: ' + calculation.gelPerBottleMassG.toFixed(1) + ' g Gel je 800-ml-Trinkflasche',
     'Squeeze-Flaschen: ' + calculation.gelPerSqueezeMassG.toFixed(1) + ' g je Flasche',
     'Drink je Stunde: ca. ' + drinkMlPerH + ' ml',

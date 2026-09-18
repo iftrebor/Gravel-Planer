@@ -9,7 +9,8 @@ export const LIMITS = Object.freeze({
   mlPerHour: [300, 1200],
   carbPerHour: [40, 110],
   saltPerHour: [200, 1500],
-  bottleMl: [500, 1000]
+  bottleMl: [500, 1000],
+  days: [1, 14]
 });
 
 export function clampNumber(value, min, max, fallback) {
@@ -36,6 +37,7 @@ export function normalizeInput(input = {}) {
     carbPerHour: clampNumber(input.carbPerHour, ...LIMITS.carbPerHour, 60),
     saltPerHour: clampNumber(saltPerHour, ...LIMITS.saltPerHour, 500),
     bottleMl: clampNumber(input.bottleMl, ...LIMITS.bottleMl, 800),
+    days: clampNumber(input.days, ...LIMITS.days, 1),
     hotMode: Boolean(input.hotMode),
     waterSecond: Boolean(input.waterSecond),
     ratio: parseRatio(input.ratio)
@@ -61,6 +63,11 @@ export function calculateTour(rawInput = {}) {
   const refillsNeeded = Math.max(0, Math.ceil((totalMl - input.bottleMl * 2) / input.bottleMl));
   const totalCarbs = Math.round(input.carbPerHour * duration);
   const totalSodium = Math.round(naPerHour * duration);
+  const dailyDistance = input.distance / input.days;
+  const dailyDuration = duration / input.days;
+  const dailyTotalMl = Math.round(totalMl / input.days);
+  const dailyTotalCarbs = Math.round(totalCarbs / input.days);
+  const dailyTotalSalt = totalSodium / SODIUM_PER_MG_SALT / 1000 / input.days;
   const gelWaterMl = Math.round(totalCarbs * GEL_WATER_PER_CARB);
   const gelWaterPerBottleMl = Math.round(carbPerBottle * GEL_WATER_PER_CARB);
   const totalSaltMg = totalSodium / SODIUM_PER_MG_SALT;
@@ -93,6 +100,11 @@ export function calculateTour(rawInput = {}) {
     refillsNeeded,
     totalCarbs,
     totalSodium,
+    dailyDistance,
+    dailyDuration,
+    dailyTotalMl,
+    dailyTotalCarbs,
+    dailyTotalSalt,
     gelWaterMl,
     gelWaterPerBottleMl,
     gelConcentrateMassG,
