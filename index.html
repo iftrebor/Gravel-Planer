@@ -83,6 +83,8 @@ section h2{margin:0 0 var(--space-3);font-size:19px}
 .gel-intro{margin:0 0 var(--space-2);color:var(--muted)}
 .gel-cards{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:var(--space-2)}
 .gel-card h3{margin:0 0 var(--space-2)}
+.gel-card h4{margin:16px 0 8px;font-size:14px}
+.gel-card h4:first-of-type{margin-top:0}
 .gel-card li+li{margin-top:8px}
 @media(max-width:740px){
   .gel-cards{grid-template-columns:1fr}
@@ -370,7 +372,14 @@ details>summary{cursor:pointer;font-weight:700}
     <h2>Gel vorbereiten</h2>
     <p class="gel-intro">Erst das Gel-Konzentrat anrühren, danach jede Trinkflasche einzeln dosieren und mit Wasser auffüllen.</p>
     <div class="gel-cards">
-      <div class="card gel-card"><h3>1. Gel-Konzentrat anrühren 🧴</h3><ul id="gelMixList" class="small"></ul></div>
+      <div class="card gel-card">
+        <h3>1. Gel-Konzentrat anrühren 🧴</h3>
+        <h4>Zutaten</h4>
+        <ul id="gelIngredientsList" class="small"></ul>
+        <details><summary>Anleitung</summary><ul id="gelInstructionsList" class="small"></ul></details>
+        <h4>Abfüllen</h4>
+        <ul id="gelFillList" class="small"></ul>
+      </div>
       <div class="card gel-card"><h3>2. Trinkflaschen vorbereiten 🧪</h3><ul id="recipeList" class="small"></ul></div>
     </div>
   </section>
@@ -708,13 +717,19 @@ function compute(){
   const totalMalto = Math.round(totalCarbDrink * ratio.m);
   const totalFructose = Math.round(totalCarbDrink * ratio.f);
 
-  document.getElementById('gelMixList').innerHTML = [
+  document.getElementById('gelIngredientsList').innerHTML = [
     totalMalto + ' g Maltodextrin',
     totalFructose + ' g Fruktose',
     totalSalt.toFixed(1) + ' g Salz <span class="muted">(~' + totalNa + ' mg Natrium)</span>',
     calculation.gelWaterMl + ' ml Wasser für das gesamte Gel-Konzentrat <span class="muted">(0,7 ml je g KH)</span>',
-    'Aroma / Sirup nach Geschmack',
+    'Aroma / Sirup nach Geschmack'
+  ].map(x => '<li>'+x+'</li>').join('');
+
+  document.getElementById('gelInstructionsList').innerHTML = [
     'Pulver und Salz mit dem Wasser unter Erwärmen gründlich auflösen und anschließend abkühlen lassen',
+  ].map(x => '<li>'+x+'</li>').join('');
+
+  document.getElementById('gelFillList').innerHTML = [
     'Das Konzentrat auf die zwei ' + bottleMl + '-ml-Flaschen und die zwei Squeeze-Flaschen verteilen',
     calculation.gelPerBottleMassG.toFixed(1) + ' g Gel-Konzentrat je ' + bottleMl + '-ml-Trinkflasche',
     calculation.gelPerSqueezeMassG.toFixed(1) + ' g Gel je Squeeze-Flasche (2 × 250 ml gleichmäßig befüllen)',
