@@ -5,12 +5,12 @@ export const GEL_DENSITY_G_PER_ML = 1.3;
 
 export const LIMITS = Object.freeze({
   distance: [10, 1000],
-  speed: [10, 40],
+  speed: [15, 25],
   mlPerHour: [300, 1200],
-  carbPerHour: [40, 110],
-  saltPerHour: [200, 1500],
+  carbPerHour: [40, 80],
+  saltPerHour: [300, 900],
   bottleMl: [500, 1000],
-  days: [1, 14]
+  days: [1, 7]
 });
 
 export function clampNumber(value, min, max, fallback) {
