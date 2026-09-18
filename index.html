@@ -612,11 +612,7 @@ function compute(){
   ].map(x => '<li>'+x+'</li>').join('');
 
   document.getElementById('recipeList').innerHTML = [
-    Math.round(carbPerBottle*ratio.m) + ' g Maltodextrin',
-    Math.round(carbPerBottle*ratio.f) + ' g Fruktose',
-    (saltPerBottle / 1000).toFixed(2) + ' g Salz <span class="muted">(~' + Math.round(mgNaPerBottle) + ' mg Natrium)</span>',
-    calculation.gelWaterPerBottleMl + ' ml Wasser je 800-ml-Trinkflasche für den Gel-Anteil',
-    'Pro gemischter Flasche anteilig aus dem Gel-Konzentrat dosieren',
+    calculation.gelPerBottleMl + ' ml Gel-Konzentrat je 800-ml-Trinkflasche',
     'Dann mit Wasser bis ' + bottleMl + ' ml auffüllen',
     waterSecond ? '2. Flasche bleibt Wasser' : '2. Flasche ebenfalls als gemischter Drink ansetzen'
   ].map(x => '<li>'+x+'</li>').join('');
