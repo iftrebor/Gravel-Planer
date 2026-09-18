@@ -58,7 +58,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .tabbtn{border:none;border-right:1px solid var(--border);background:transparent;padding:4px 3px;font-weight:700;height:62px;min-height:0;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;line-height:1.15;white-space:normal;word-break:normal;overflow-wrap:normal;hyphens:auto}
 .tabbtn:last-child{border-right:none}
 .tabbtn.active{color:var(--ink);background:rgba(255,255,255,.03)}
-main{display:grid;gap:var(--space-4)}
+main{display:grid;gap:var(--space-4);min-height:calc(100svh - var(--safe-top) - 88px)}
 section.panel{display:none;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4);box-shadow:var(--shadow)}
 section.panel.active{display:block}
 section h2{margin:0 0 var(--space-3);font-size:19px}
