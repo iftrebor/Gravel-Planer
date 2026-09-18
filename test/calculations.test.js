@@ -40,3 +40,11 @@ test('splits drink and water correctly', () => {
   assert.equal(result.drinkMlPerHour, 325);
   assert.equal(result.waterMlPerHour, 325);
 });
+
+test('splits a bikepacking tour evenly across days', () => {
+  const result = calculateTour({ distance: 200, speed: 20, days: 2 });
+  assert.equal(result.dailyDistance, 100);
+  assert.equal(result.dailyDuration, 5);
+  assert.equal(result.dailyTotalMl, 3250);
+  assert.equal(result.dailyTotalCarbs, 300);
+});
