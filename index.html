@@ -198,10 +198,6 @@ details>summary{cursor:pointer;font-weight:700}
               </select>
               <div class="help">Standard: 1:2</div>
             </div>
-            <div class="field">
-              <label class="pill" for="waterSecond"><input type="checkbox" id="waterSecond"> <span>2. Flasche = Wasser 🚰</span></label>
-              <div class="help">Standard: beide Flaschen mit gemischtem Drink.</div>
-            </div>
           </div>
         </div>
 
@@ -302,10 +298,6 @@ details>summary{cursor:pointer;font-weight:700}
                 <option value="1:3">1:3</option>
               </select>
               <div class="help">Standard: 1:2</div>
-            </div>
-            <div class="field">
-              <label class="pill" for="waterSecond_m"><input type="checkbox" id="waterSecond_m"> <span>2. Flasche = Wasser 🚰</span></label>
-              <div class="help">Standard: beide Flaschen mit gemischtem Drink.</div>
             </div>
           </div>
         </div>
@@ -408,7 +400,6 @@ const inputMap = {
   saltPerHour:['saltPerHour','saltPerHour_m'],
   bottleMl:['bottleMl','bottleMl_m'],
   ratio:['ratio','ratio_m'],
-  waterSecond:['waterSecond','waterSecond_m']
 };
 
 function isMobile(){ return window.matchMedia('(max-width: 640px)').matches; }
@@ -508,7 +499,6 @@ function resetInputs(){
   setVal('saltPerHour', 500);
   setVal('bottleMl', 800);
   setVal('ratio', '1:2');
-  setVal('waterSecond', false);
   compute();
 }
 
@@ -521,7 +511,7 @@ function buildSnackStrategy(hours, snickers, bananas){
   if(hours >= 6) items.push('Bei langen Touren spätestens alle 60–90 min bewusst etwas essen, auch ohne Hunger.');
   return items;
 }
-function buildRefillStrategy(totalMl, bottleMl, waterSecond, duration){
+function buildRefillStrategy(totalMl, bottleMl, duration){
   const startVolume = bottleMl * 2;
   const refillsNeeded = Math.max(0, Math.ceil((totalMl - startVolume) / bottleMl));
   const items = ['Startkapazität mit 2 Flaschen: ' + startVolume + ' ml.'];
@@ -529,7 +519,7 @@ function buildRefillStrategy(totalMl, bottleMl, waterSecond, duration){
     items.push('Für diese Tour ist voraussichtlich kein Nachfüllen nötig.');
   } else {
     items.push('Es werden voraussichtlich ' + refillsNeeded + ' zusätzliche Flaschenfüllungen benötigt.');
-    items.push(waterSecond ? 'Mit 1× Drink + 1× Wasser starten und unterwegs Wasser nachfüllen.' : 'Mit 2× gemischtem Drink starten.');
+    items.push('Mit 2× gemischtem Drink starten und unterwegs Wasser nachfüllen.');
   }
   if(duration >= 6) items.push('Bei langer Tour Stopps oder verlässliche Wasserquelle vorab planen.');
   return items;
@@ -553,7 +543,6 @@ function readFormState(){
     saltPerHour: getVal('saltPerHour'),
     bottleMl: getVal('bottleMl'),
     ratio: getVal('ratio'),
-    waterSecond: getVal('waterSecond')
   });
   return state;
 }
@@ -570,7 +559,6 @@ function compute(){
     saltPerHour: state.saltPerHour,
     bottleMl: state.bottleMl,
     ratio: ratio.label,
-    waterSecond: state.waterSecond,
     days: state.days
   });
 
@@ -580,7 +568,6 @@ function compute(){
   const carbPerHour = state.carbPerHour;
   const saltPerHour = calculation.saltPerHour;
   const bottleMl = state.bottleMl;
-  const waterSecond = state.waterSecond;
   const drinkMlPerH = calculation.drinkMlPerHour;
   const waterMlPerH = calculation.waterMlPerHour;
   const carbPerBottle = calculation.carbPerBottle;
@@ -602,7 +589,7 @@ function compute(){
   mirror(['kpiCarbBottleSub','kpiCarbBottleSub_m'], Math.round(carbPerBottle*ratio.f) + ' g Fruktose + ' + Math.round(carbPerBottle*ratio.m) + ' g Malto');
   mirror(['kpiSaltBottle','kpiSaltBottle_m'], (saltPerBottle / 1000).toFixed(2) + ' g');
   mirror(['kpiSaltBottleSub','kpiSaltBottleSub_m'], '≈ ' + Math.round(mgNaPerBottle) + ' mg Na pro Flasche');
-  mirror(['badgeSplit','badgeSplit_m'], 'Drink ' + drinkMlPerH + ' ml/h · Wasser ' + waterMlPerH + ' ml/h');
+  mirror(['badgeSplit','badgeSplit_m'], '2× Drink · ' + drinkMlPerH + ' ml/h');
   mirror(['badgeBottles','badgeBottles_m'], 'ca. ' + totalBottles + ' Flaschen gesamt');
   mirror(['badgeRefill','badgeRefill_m'], refillsNeeded > 0 ? ('Refills nötig: ' + refillsNeeded) : 'Kein Refill nötig');
 
@@ -636,7 +623,7 @@ function compute(){
     '<b>Trinken:</b> ' + mlPerHour + ' ml/h <span class="muted">(Drink ~' + drinkMlPerH + ' · Wasser ~' + waterMlPerH + ')</span>',
     '<b>KH:</b> ' + carbPerHour + ' g/h · <b>Salz:</b> ' + saltPerHour + ' mg/h (~' + Math.round(calculation.naPerHour) + ' mg Natrium/h)',
     state.hotMode ? 'Hitze-Modus aktiv: Berechnung mindestens mit 800 ml/h und 850 mg Salz/h – KH bleiben unverändert' : 'Hitze-Modus aus: Berechnung folgt exakt deinen Eingabewerten',
-    waterSecond ? '2. Flasche: Wasser' : '2. Flasche: ebenfalls Drink'
+    'Flaschen: 2× Gel-Mischung'
   ].map(x => '<li>'+x+'</li>').join('');
 
   document.getElementById('totals').innerHTML = [
@@ -652,7 +639,7 @@ function compute(){
   const bananas = 1;
 
   document.getElementById('carry').innerHTML = [
-    'Am Rad: Trinkflaschen (' + (waterSecond ? '1× Drink, 1× Wasser' : '2× Drink') + ')',
+    'Am Rad: 2× Trinkflasche mit Gel-Mischung',
     '1 Gel-/Konzentratflasche mit der Gesamtmischung',
     snickers + '× Snickers (geteilt essen)',
     bananas + '× Banane',
@@ -661,7 +648,7 @@ function compute(){
   ].map(x => '<li>'+x+'</li>').join('');
 
   document.getElementById('snackStrategy').innerHTML = buildSnackStrategy(Math.max(1, Math.ceil(duration)), snickers, bananas).map(x => '<li>'+x+'</li>').join('');
-  document.getElementById('refillStrategy').innerHTML = buildRefillStrategy(totalMl, bottleMl, waterSecond, duration).map(x => '<li>'+x+'</li>').join('');
+  document.getElementById('refillStrategy').innerHTML = buildRefillStrategy(totalMl, bottleMl, duration).map(x => '<li>'+x+'</li>').join('');
   document.getElementById('packLogic').innerHTML = buildPackLogic(duration, state.hotMode, totalMl, refillsNeeded).map(x => '<li>'+x+'</li>').join('');
 
   const tbody = document.getElementById('scheduleBody');
@@ -693,7 +680,7 @@ function compute(){
   document.getElementById('sumCarbPerH').textContent = carbPerHour + ' g';
 
   const summary = [
-    'Flaschenmix: ' + (waterSecond ? '1× Drink + 1× Wasser' : '2× gemischter Drink'),
+    'Flaschenmix: 2× gemischter Drink',
     'Gel-Konzentrat gesamt: ' + totalCarbDrink + ' g KH und ' + totalSalt.toFixed(1) + ' g Salz',
     'Bikepacking: ' + days + ' Tag' + (days === 1 ? '' : 'e') + ' · pro Tag ca. ' + calculation.dailyDistance.toFixed(1) + ' km, ' + calculation.dailyTotalCarbs + ' g KH und ' + calculation.dailyTotalMl + ' ml',
     'Dosierung: ' + calculation.gelPerBottleMassG.toFixed(1) + ' g Gel je 800-ml-Trinkflasche',
@@ -719,7 +706,6 @@ function compute(){
     saltPerHour: state.saltPerHour,
     bottleMl: state.bottleMl,
     ratio: ratio.label,
-    waterSecond: state.waterSecond
   }));
 }
 
@@ -797,8 +783,8 @@ function bindInput(id){
   });
 }
 [
-  'distance','speed','hotMode','mlPerHour','carbPerHour','saltPerHour','bottleMl','ratio','waterSecond',
-  'distance_m','speed_m','hotMode_m','mlPerHour_m','carbPerHour_m','saltPerHour_m','bottleMl_m','ratio_m','waterSecond_m'
+  'distance','speed','hotMode','mlPerHour','carbPerHour','saltPerHour','bottleMl','ratio',
+  'distance_m','speed_m','hotMode_m','mlPerHour_m','carbPerHour_m','saltPerHour_m','bottleMl_m','ratio_m'
 ].forEach(bindInput);
 
 document.getElementById('themeToggle').addEventListener('click', toggleTheme);
@@ -823,7 +809,6 @@ updatePresetButtons();
 buildChecklist();
 const savedTab = localStorage.getItem('gravel_plan_v62_tab') || localStorage.getItem('gravel_plan_v61_tab');
 if(savedTab && document.getElementById(savedTab)) switchTab(savedTab);
-if(!localStorage.getItem(STATE_KEY)) setVal('waterSecond', false);
 compute();
 window.addEventListener('resize', compute);
 if('serviceWorker' in navigator){ window.addEventListener('load', ()=>navigator.serviceWorker.register('./sw.js')); }
