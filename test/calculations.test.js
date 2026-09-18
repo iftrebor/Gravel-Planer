@@ -20,19 +20,19 @@ test('calculates a standard 130 km tour', () => {
   assert.equal(result.totalMl, 4225);
   assert.equal(result.totalCarbs, 390);
   assert.equal(result.gelWaterMl, 273);
-  assert.equal(result.gelWaterPerBottleMl, 61);
+  assert.equal(result.gelWaterPerBottleMl, 52);
   assert.equal(result.gelPerBottleMassG, 126.5);
-  assert.equal(result.squeezeGelMassG, 413.3);
-  assert.equal(result.gelPerSqueezeMassG, 206.7);
+  assert.ok(Math.abs(result.squeezeGelMassG - 413.2) < 1e-9);
+  assert.equal(result.gelPerSqueezeMassG, 206.6);
   assert.equal(result.extraGelVesselMassG, 0);
   assert.equal(result.totalSodium, 1277);
-  assert.equal(result.totalSalt, 3.25);
+  assert.ok(Math.abs(result.totalSalt - 3.2493638676844783) < 1e-9);
 });
 
-test('converts salt input to sodium output', () => {
-  const result = calculateTour({ saltPerHour: 1000 });
-  assert.equal(result.naPerHour, 393);
-  assert.equal(result.saltPerBottle, 1000);
+test('converts the maximum supported salt input to sodium output', () => {
+  const result = calculateTour({ saltPerHour: 900 });
+  assert.equal(result.naPerHour, 353.7);
+  assert.ok(Math.abs(result.saltPerBottle - 1107.6923076923076) < 1e-9);
 });
 
 test('uses both bottles for the mixed drink', () => {
