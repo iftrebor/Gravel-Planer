@@ -7,6 +7,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#0b0f14">
+<meta name="color-scheme" content="dark light">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Gravel Plan">
@@ -26,8 +27,10 @@
 body{
   margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.35;
   padding:calc(var(--space-3) + var(--safe-top)) var(--space-3) calc(88px + var(--safe-bottom));
+  overscroll-behavior-y:contain;
   max-width:980px;margin-inline:auto
 }
+button,input,select,summary{touch-action:manipulation}
 button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible{
   outline:3px solid rgba(44,197,111,.7);
   outline-offset:2px;
@@ -50,9 +53,9 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .btn.small{padding:10px 12px;min-height:42px;font-size:14px}
 .btn.preset-active{background:linear-gradient(180deg,var(--accent),#1b944f);color:#08210f;border-color:#177d43}
 .btn-help{display:block;font-weight:500;margin-top:4px;line-height:1.25}
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);background:rgba(11,15,20,.95);backdrop-filter:blur(12px);border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);background:rgba(11,15,20,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border);padding-bottom:var(--safe-bottom)}
 :root.light .tabs{background:rgba(245,247,251,.96)}
-.tabbtn{border:none;border-right:1px solid var(--border);background:transparent;padding:12px 6px 14px;font-weight:700;min-height:62px}
+.tabbtn{border:none;border-right:1px solid var(--border);background:transparent;padding:12px 6px 14px;font-weight:700;min-height:62px;font-size:14px}
 .tabbtn:last-child{border-right:none}
 .tabbtn.active{color:var(--ink);background:rgba(255,255,255,.03)}
 main{display:grid;gap:var(--space-4)}
@@ -146,17 +149,17 @@ details>summary{cursor:pointer;font-weight:700}
           <div class="row">
             <div class="field">
               <label for="distance">Distanz (km) 🚴</label>
-              <input type="number" id="distance" value="130" min="10" max="1000" step="5">
+              <input type="number" id="distance" inputmode="numeric" value="130" min="10" max="1000" step="5">
               <div class="help">Typisch: 80–200 km</div>
             </div>
             <div class="field">
               <label for="speed">Ø‑Geschwindigkeit (km/h) ⏱️</label>
-              <input type="number" id="speed" value="20" min="10" max="40" step="0.5">
+              <input type="number" id="speed" inputmode="decimal" value="20" min="10" max="40" step="0.5">
               <div class="help">Typisch: 16–24 km/h</div>
             </div>
             <div class="field">
               <label for="days">Bikepacking-Tage 🏕️</label>
-              <input type="number" id="days" value="1" min="1" max="14" step="1">
+              <input type="number" id="days" inputmode="numeric" value="1" min="1" max="14" step="1">
               <div class="help">Gesamttour gleichmäßig auf mehrere Tage verteilen.</div>
             </div>
             <div class="field full">
@@ -171,22 +174,22 @@ details>summary{cursor:pointer;font-weight:700}
           <div class="row">
             <div class="field">
               <label for="mlPerHour">Trinkmenge (ml/h) 💧</label>
-              <input type="number" id="mlPerHour" value="650" min="300" max="1200" step="10">
+              <input type="number" id="mlPerHour" inputmode="numeric" value="650" min="300" max="1200" step="10">
               <div class="help">Typisch: 600–800 ml/h</div>
             </div>
             <div class="field">
               <label for="carbPerHour">Kohlenhydrate (g/h) 🍫</label>
-              <input type="number" id="carbPerHour" value="60" min="40" max="110" step="1">
+              <input type="number" id="carbPerHour" inputmode="numeric" value="60" min="40" max="110" step="1">
               <div class="help">Typisch: 50–80 g/h</div>
             </div>
             <div class="field">
               <label for="saltPerHour">Salz-Ziel (mg/h) 🧂</label>
-              <input type="number" id="saltPerHour" value="500" min="200" max="1500" step="25">
+              <input type="number" id="saltPerHour" inputmode="numeric" value="500" min="200" max="1500" step="25">
               <div class="help">1 g Salz enthält ca. 393 mg Natrium · Startwert: 500 mg Salz/h</div>
             </div>
             <div class="field">
               <label for="bottleMl">Flaschengröße (ml) 🍼</label>
-              <input type="number" id="bottleMl" value="800" min="500" max="1000" step="50">
+              <input type="number" id="bottleMl" inputmode="numeric" value="800" min="500" max="1000" step="50">
               <div class="help">Typisch: 750–850 ml</div>
             </div>
             <div class="field">
@@ -247,17 +250,17 @@ details>summary{cursor:pointer;font-weight:700}
           <div class="row">
             <div class="field">
               <label for="distance_m">Distanz (km) 🚴</label>
-              <input type="number" id="distance_m" value="130" min="10" max="1000" step="5">
+              <input type="number" id="distance_m" inputmode="numeric" value="130" min="10" max="1000" step="5">
               <div class="help">Typisch: 80–200 km</div>
             </div>
             <div class="field">
               <label for="speed_m">Ø‑Geschwindigkeit (km/h) ⏱️</label>
-              <input type="number" id="speed_m" value="20" min="10" max="40" step="0.5">
+              <input type="number" id="speed_m" inputmode="decimal" value="20" min="10" max="40" step="0.5">
               <div class="help">Typisch: 16–24 km/h</div>
             </div>
             <div class="field">
               <label for="days_m">Bikepacking-Tage 🏕️</label>
-              <input type="number" id="days_m" value="1" min="1" max="14" step="1">
+              <input type="number" id="days_m" inputmode="numeric" value="1" min="1" max="14" step="1">
               <div class="help">Gesamttour gleichmäßig auf mehrere Tage verteilen.</div>
             </div>
             <div class="field full">
@@ -272,22 +275,22 @@ details>summary{cursor:pointer;font-weight:700}
           <div class="row">
             <div class="field">
               <label for="mlPerHour_m">Trinkmenge (ml/h) 💧</label>
-              <input type="number" id="mlPerHour_m" value="650" min="300" max="1200" step="10">
+              <input type="number" id="mlPerHour_m" inputmode="numeric" value="650" min="300" max="1200" step="10">
               <div class="help">Typisch: 600–800 ml/h</div>
             </div>
             <div class="field">
               <label for="carbPerHour_m">Kohlenhydrate (g/h) 🍫</label>
-              <input type="number" id="carbPerHour_m" value="60" min="40" max="110" step="1">
+              <input type="number" id="carbPerHour_m" inputmode="numeric" value="60" min="40" max="110" step="1">
               <div class="help">Typisch: 50–80 g/h</div>
             </div>
             <div class="field">
               <label for="saltPerHour_m">Salz-Ziel (mg/h) 🧂</label>
-              <input type="number" id="saltPerHour_m" value="500" min="200" max="1500" step="25">
+              <input type="number" id="saltPerHour_m" inputmode="numeric" value="500" min="200" max="1500" step="25">
               <div class="help">1 g Salz enthält ca. 393 mg Natrium · Startwert: 500 mg Salz/h</div>
             </div>
             <div class="field">
               <label for="bottleMl_m">Flaschengröße (ml) 🍼</label>
-              <input type="number" id="bottleMl_m" value="800" min="500" max="1000" step="50">
+              <input type="number" id="bottleMl_m" inputmode="numeric" value="800" min="500" max="1000" step="50">
               <div class="help">Typisch: 750–850 ml</div>
             </div>
             <div class="field">
