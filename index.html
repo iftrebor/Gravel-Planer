@@ -55,7 +55,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .btn-help{display:block;font-weight:500;margin-top:4px;line-height:1.25}
 .tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:rgba(11,15,20,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border);padding-bottom:var(--safe-bottom)}
 :root.light .tabs{background:rgba(245,247,251,.96)}
-.tabbtn{border:none;border-right:1px solid var(--border);background:transparent;padding:12px 4px 14px;font-weight:700;min-height:62px;font-size:14px;line-height:1.15}
+.tabbtn{border:none;border-right:1px solid var(--border);background:transparent;padding:12px 3px 14px;font-weight:700;min-height:62px;font-size:12px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tabbtn:last-child{border-right:none}
 .tabbtn.active{color:var(--ink);background:rgba(255,255,255,.03)}
 main{display:grid;gap:var(--space-4)}
@@ -120,6 +120,7 @@ details>summary{cursor:pointer;font-weight:700}
   .kpi .v{font-size:20px}
   .toolbar{margin-top:var(--space-2)}
 }
+@media(max-width:360px){.tabbtn{font-size:10px;padding-inline:2px}}
 </style>
 </head>
 <body>
@@ -386,10 +387,9 @@ details>summary{cursor:pointer;font-weight:700}
   <section class="panel" id="tab-food">
     <h2>Verpflegung</h2>
     <div class="food-section">
-      <h3>Vorbereitung</h3>
+      <h3>Lebensmittel & Getränke</h3>
       <div class="cards">
-        <div class="card"><h4>Gesamtbedarf (Tour) 📊</h4><ul id="totals" class="small"></ul></div>
-        <div class="card"><h4>Mitnehmen & Transport 🎒</h4><ul id="carry" class="small"></ul></div>
+        <div class="card"><h4>Für die Tour einpacken 🎒</h4><ul id="carry" class="small"></ul></div>
       </div>
     </div>
     <div class="food-section">
@@ -414,7 +414,7 @@ details>summary{cursor:pointer;font-weight:700}
   </section>
 
   <section class="panel" id="tab-summary">
-    <h2>Kurzansicht</h2>
+    <h2>Zusammenfassung</h2>
     <div class="kpis">
       <div class="kpi"><div class="k">Distanz</div><div class="v" id="sumDistance">–</div><div class="s">km</div></div>
       <div class="kpi"><div class="k">Dauer</div><div class="v" id="sumDuration">–</div><div class="s">Stunden</div></div>
@@ -433,7 +433,7 @@ details>summary{cursor:pointer;font-weight:700}
   <button class="tabbtn" data-tab="tab-gel" role="tab" aria-selected="false" aria-controls="tab-gel">Gel vorbereiten</button>
   <button class="tabbtn" data-tab="tab-food" role="tab" aria-selected="false" aria-controls="tab-food">Verpflegung</button>
   <button class="tabbtn" data-tab="tab-checklist" role="tab" aria-selected="false" aria-controls="tab-checklist">Packliste</button>
-  <button class="tabbtn" data-tab="tab-summary" role="tab" aria-selected="false" aria-controls="tab-summary">Kurzansicht</button>
+  <button class="tabbtn" data-tab="tab-summary" role="tab" aria-selected="false" aria-controls="tab-summary">Zusammenfassung</button>
 </div>
 
 <script type="module">
@@ -749,25 +749,14 @@ function compute(){
     'Flaschen: 2× Gel-Mischung'
   ].map(x => '<li>'+x+'</li>').join('');
 
-  document.getElementById('totals').innerHTML = [
-    '<b>Dauer:</b> ' + (Math.round(duration*4)/4).toFixed(1) + ' h',
-    '<b>Gesamttrinkmenge:</b> ' + formatLiters(totalMl) + ' gemischter Drink',
-    '<b>Bikepacking:</b> ' + days + ' Tag' + (days === 1 ? '' : 'e') + ' · pro Tag ca. ' + calculation.dailyDistance.toFixed(1) + ' km, ' + calculation.dailyDuration.toFixed(1) + ' h, ' + formatLiters(calculation.dailyTotalMl) + ', ' + calculation.dailyTotalCarbs + ' g KH und ' + calculation.dailyTotalSalt.toFixed(1) + ' g Salz',
-    '<b>Flaschen gesamt:</b> ' + totalBottles + ' × ' + bottleMl + ' ml',
-    '<b>KH gesamt:</b> ~' + totalCarbDrink + ' g',
-    '<b>Salz gesamt:</b> ~' + totalSalt.toFixed(1) + ' g <span class="muted">(≈ ' + totalNa + ' mg Natrium)</span>'
-  ].map(x => '<li>'+x+'</li>').join('');
-
   const snickers = Math.max(1, Math.ceil(duration * 0.33));
   const bananas = Math.max(1, Math.ceil(duration / 3));
 
   document.getElementById('carry').innerHTML = [
     'Am Rad: 2× Trinkflasche mit Gel-Mischung',
-    '1 Gel-/Konzentratflasche mit der Gesamtmischung',
     snickers + '× Snickers (geteilt essen)',
     bananas + '× Banane',
-    'Aroma / Sirup für das Gel',
-    'Kleiner Müllbeutel'
+    'Aroma / Sirup für das Gel'
   ].map(x => '<li>'+x+'</li>').join('');
 
   document.getElementById('snackStrategy').innerHTML = buildSnackStrategy(Math.max(1, Math.ceil(duration)), snickers, bananas).map(x => '<li>'+x+'</li>').join('');
@@ -781,9 +770,11 @@ function compute(){
 
   const summary = [
     'Tour: ' + state.distance + ' km · ' + (Math.round(duration*4)/4).toFixed(1) + ' h · ' + days + ' Tag' + (days === 1 ? '' : 'e'),
+    'Ø-Geschwindigkeit: ' + state.speed + ' km/h',
     'Gemischter Drink: ' + formatLiters(drinkMlPerH) + '/h · gesamt ' + formatLiters(totalMl),
     'Kohlenhydrate: ' + carbPerHour + ' g/h · gesamt ' + totalCarbDrink + ' g',
     'Salz: ' + saltPerHour + ' mg/h · gesamt ' + totalSalt.toFixed(1) + ' g',
+    'Flaschen gesamt: ' + totalBottles + ' × ' + bottleMl + ' ml',
     'Dosierung: ' + calculation.gelPerBottleMassG.toFixed(1) + ' g Gel je ' + bottleMl + '-ml-Trinkflasche',
     'Squeeze-Flaschen: ' + calculation.gelPerSqueezeMassG.toFixed(1) + ' g je Flasche',
     'Flaschenfüllungen: 2 starten · ' + (refillsNeeded > 0 ? refillsNeeded + ' weitere einplanen' : 'kein weiteres Nachfüllen nötig'),
