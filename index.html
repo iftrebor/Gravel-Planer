@@ -613,8 +613,7 @@ function compute(){
 
   document.getElementById('recipeList').innerHTML = [
     calculation.gelPerBottleMl + ' ml Gel-Konzentrat je 800-ml-Trinkflasche',
-    'Dann mit Wasser bis ' + bottleMl + ' ml auffüllen',
-    waterSecond ? '2. Flasche bleibt Wasser' : '2. Flasche ebenfalls als gemischter Drink ansetzen'
+    'Dann mit Wasser bis ' + bottleMl + ' ml auffüllen'
   ].map(x => '<li>'+x+'</li>').join('');
 
   document.getElementById('targets').innerHTML = [
