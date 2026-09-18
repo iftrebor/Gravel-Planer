@@ -210,7 +210,6 @@ details>summary{cursor:pointer;font-weight:700}
         <div class="toolbar">
           <button class="btn" id="suggestBtn">✨ Empfehlungen übernehmen<span class="btn-help">normal: 650 ml/h · 60 g/h · 500 mg Salz/h · Flasche 800 ml · Verhältnis 1:2<br>Hitze: 800 ml/h · 60 g/h · 850 mg Salz/h · Flasche 800 ml · Verhältnis 1:2</span></button>
           <button class="btn ghost" id="resetBtn">↺ Zurücksetzen</button>
-          <button class="btn primary" id="calcBtn">🧮 Plan berechnen</button>
         </div>
         <div id="validationMessage" class="field-error" role="alert" aria-live="polite"></div>
       </div>
@@ -245,7 +244,6 @@ details>summary{cursor:pointer;font-weight:700}
       <div class="toolbar">
         <button class="btn" id="suggestBtn_m">✨ Empfehlungen übernehmen<span class="btn-help">normal: 650 ml/h · 60 g/h · 500 mg Salz/h · Flasche 800 ml · Verhältnis 1:2<br>Hitze: 800 ml/h · 60 g/h · 850 mg Salz/h · Flasche 800 ml · Verhältnis 1:2</span></button>
         <button class="btn ghost" id="resetBtn_m">↺ Zurücksetzen</button>
-        <button class="btn primary" id="calcBtn_m">🧮 Plan berechnen</button>
       </div>
       <div id="validationMessage_m" class="field-error" role="alert" aria-live="polite"></div>
 
@@ -855,8 +853,6 @@ function bindInput(id){
 ].forEach(bindInput);
 
 document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-document.getElementById('calcBtn').addEventListener('click', compute);
-document.getElementById('calcBtn_m').addEventListener('click', compute);
 document.getElementById('suggestBtn').addEventListener('click', applySuggestions);
 document.getElementById('suggestBtn_m').addEventListener('click', applySuggestions);
 document.getElementById('resetBtn').addEventListener('click', resetInputs);
