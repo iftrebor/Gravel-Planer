@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-<title>Gravel‑Tour – Ernährungs‑ & Trinkplan v6.1</title>
+<title>Gravel‑Tour – Ernährungs‑ & Trinkplan v6.2</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#0b0f14">
@@ -91,6 +91,7 @@ details>summary{cursor:pointer;font-weight:700}
 .footer{text-align:center;padding-bottom:8px}
 .plan-desktop{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--space-4);align-items:start}
 .plan-desktop .left,.plan-desktop .right{display:grid;gap:var(--space-2);min-width:0}
+.plan-desktop .right,.plan-mobile > .kpis,.plan-mobile > .card{display:none}
 .plan-mobile{display:none}
 @media(max-width:640px){
   .plan-desktop{display:none}
@@ -377,8 +378,8 @@ details>summary{cursor:pointer;font-weight:700}
 import { calculateTour, normalizeInput, parseRatio } from './js/calculations.js';
 
 const SODIUM_PER_GRAM_SALT = 393;
-const STATE_KEY = 'gravel_plan_state_v61';
-const THEME_KEY = 'gravel_plan_theme_v61';
+const STATE_KEY = 'gravel_plan_state_v62';
+const THEME_KEY = 'gravel_plan_theme_v62';
 const toolData = {
   tools:['Multitool (mit Kettennieter)','Minipumpe oder CO₂ + 2 Kartuschen + Adapter','2 Reifenheber','Flickzeug oder Tubeless‑Plugs','1–2 Ersatzschläuche (passendes Ventil)','Kettenschloss / Kettenheber','Kettenspray','2 Schlauchadapter','2 Ersatzschläuche (passendes Ventil)'],
   safety:['Frontlicht (geladen)','Rücklicht (geladen)','Reflektor‑Band / Clip','Erste‑Hilfe‑Set (Pflaster, Blasenpflaster, Kompresse)','Rettungsdecke'],
@@ -408,7 +409,7 @@ function switchTab(tabId){
     b.classList.toggle('active', active);
     b.setAttribute('aria-selected', String(active));
   });
-  localStorage.setItem('gravel_plan_v61_tab', tabId);
+  localStorage.setItem('gravel_plan_v62_tab', tabId);
   window.scrollTo({top:0, behavior:'smooth'});
 }
 document.querySelectorAll('.tabbtn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
@@ -421,7 +422,7 @@ function toggleTheme(){
   applyTheme(document.documentElement.classList.contains('light') ? 'dark' : 'light');
 }
 function restoreTheme(){
-  const saved = localStorage.getItem(THEME_KEY);
+  const saved = localStorage.getItem(THEME_KEY) || localStorage.getItem('gravel_plan_theme_v61');
   if(saved) return applyTheme(saved);
   applyTheme(window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
 }
@@ -593,7 +594,7 @@ function compute(){
   const mixedDrinkBottles = bottleMl > 0 ? (totalDrinkMl / bottleMl) : 0;
   const totalMalto = Math.round(totalCarbDrink * ratio.m);
   const totalFructose = Math.round(totalCarbDrink * ratio.f);
-  const totalSalt = totalNa / SODIUM_PER_GRAM_SALT * 1000;
+  const totalSalt = calculation.totalSalt;
 
   document.getElementById('gelMixList').innerHTML = [
     totalMalto + ' g Maltodextrin',
@@ -603,8 +604,8 @@ function compute(){
     'Aroma / Sirup nach Geschmack',
     'Pulver und Salz mit dem Wasser unter Erwärmen gründlich auflösen und anschließend abkühlen lassen',
     'Das Konzentrat auf die zwei 800-ml-Flaschen und die zwei Squeeze-Flaschen verteilen',
-    calculation.gelPerBottleMl + ' ml Gel-Konzentrat je 800-ml-Trinkflasche',
-    calculation.gelPerSqueezeMl.toFixed(1) + ' ml Gel-Konzentrat je Squeeze-Flasche (2 × 250 ml gleichmäßig auffüllen)',
+    calculation.gelPerBottleMassG.toFixed(1) + ' g Gel-Konzentrat je 800-ml-Trinkflasche',
+    calculation.gelPerSqueezeMl.toFixed(1) + ' ml Gel je Squeeze-Flasche (Dichte-Näherung: 1,30 g/ml; 2 × 250 ml gleichmäßig auffüllen)',
     calculation.extraGelVesselMl > 0
       ? calculation.extraGelVesselMl + ' ml bleiben übrig: in ein weiteres Gefäß füllen'
       : 'Die zwei 250-ml-Squeeze-Flaschen reichen für das Rest-Konzentrat',
@@ -612,7 +613,7 @@ function compute(){
   ].map(x => '<li>'+x+'</li>').join('');
 
   document.getElementById('recipeList').innerHTML = [
-    calculation.gelPerBottleMl + ' ml Gel-Konzentrat je 800-ml-Trinkflasche',
+    calculation.gelPerBottleMassG.toFixed(1) + ' g Gel-Konzentrat je 800-ml-Trinkflasche',
     'Dann mit Wasser bis ' + bottleMl + ' ml auffüllen'
   ].map(x => '<li>'+x+'</li>').join('');
 
@@ -678,6 +679,8 @@ function compute(){
   const summary = [
     'Flaschenmix: ' + (waterSecond ? '1× Drink + 1× Wasser' : '2× gemischter Drink'),
     'Gel-Konzentrat gesamt: ' + totalCarbDrink + ' g KH und ' + totalSalt.toFixed(1) + ' g Salz',
+    'Dosierung: ' + calculation.gelPerBottleMassG.toFixed(1) + ' g Gel je 800-ml-Trinkflasche',
+    'Squeeze-Flaschen: ' + calculation.gelPerSqueezeMl.toFixed(1) + ' ml je Flasche',
     'Drink je Stunde: ca. ' + drinkMlPerH + ' ml',
     'Wasser je Stunde: ca. ' + waterMlPerH + ' ml',
     'Refills: ' + (refillsNeeded > 0 ? refillsNeeded + ' einplanen' : 'nicht nötig'),
@@ -704,7 +707,7 @@ function compute(){
 }
 
 function restoreFormState(){
-  const raw = localStorage.getItem(STATE_KEY) || localStorage.getItem('gravel_plan_state_v6');
+  const raw = localStorage.getItem(STATE_KEY) || localStorage.getItem('gravel_plan_state_v61') || localStorage.getItem('gravel_plan_state_v6');
   if(!raw) return;
   try{
     const obj = JSON.parse(raw);
@@ -756,7 +759,7 @@ async function exportPdf(){
   compute();
   await html2pdf().set({
     margin:[8,8,8,8],
-    filename:'Gravel-Plan_v61.pdf',
+    filename:'Gravel-Plan_v62.pdf',
     image:{type:'jpeg',quality:0.95},
     html2canvas:{scale:2,useCORS:true,background:'#ffffff'},
     jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
@@ -801,7 +804,7 @@ restoreTheme();
 restoreFormState();
 updatePresetButtons();
 buildChecklist();
-const savedTab = localStorage.getItem('gravel_plan_v61_tab');
+const savedTab = localStorage.getItem('gravel_plan_v62_tab') || localStorage.getItem('gravel_plan_v61_tab');
 if(savedTab && document.getElementById(savedTab)) switchTab(savedTab);
 if(!localStorage.getItem(STATE_KEY)) setVal('waterSecond', false);
 compute();
