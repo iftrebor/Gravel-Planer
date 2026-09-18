@@ -464,6 +464,7 @@ const inputMap = {
 function isMobile(){ return window.matchMedia('(max-width: 640px)').matches; }
 function el(tag, cls, text){ const e=document.createElement(tag); if(cls) e.className=cls; if(text!==undefined) e.textContent=text; return e; }
 function switchTab(tabId){
+  const scrollY = window.scrollY;
   document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === tabId));
   document.querySelectorAll('.tabbtn').forEach(b => {
     const active = b.dataset.tab === tabId;
@@ -471,6 +472,8 @@ function switchTab(tabId){
     b.setAttribute('aria-selected', String(active));
   });
   if(document.activeElement instanceof HTMLElement) document.activeElement.blur();
+  window.scrollTo(0, scrollY);
+  requestAnimationFrame(() => window.scrollTo(0, scrollY));
   localStorage.setItem('gravel_plan_v62_tab', tabId);
 }
 document.querySelectorAll('.tabbtn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
