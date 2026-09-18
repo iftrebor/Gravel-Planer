@@ -80,6 +80,14 @@ section h2{margin:0 0 var(--space-3);font-size:19px}
 @media(max-width:740px){.cards{grid-template-columns:1fr}}
 .food-section + .food-section{margin-top:18px;padding-top:18px;border-top:1px solid var(--border)}
 .food-section>h3{margin:0 0 var(--space-2)}
+.gel-intro{margin:0 0 var(--space-2);color:var(--muted)}
+.gel-cards{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:var(--space-2)}
+.gel-card h3{margin:0 0 var(--space-2)}
+.gel-card li+li{margin-top:8px}
+@media(max-width:740px){
+  .gel-cards{grid-template-columns:1fr}
+  .gel-card{padding:16px}
+}
 ul{margin:0;padding-left:18px}
 table{width:100%;border-collapse:collapse;overflow:hidden;border-radius:14px}
 th,td{border-bottom:1px solid var(--border);padding:8px;vertical-align:top}
@@ -360,9 +368,10 @@ details>summary{cursor:pointer;font-weight:700}
 
   <section class="panel" id="tab-gel">
     <h2>Gel vorbereiten</h2>
-    <div class="cards">
-      <div class="card"><h3>Gel-Konzentrat gesamt 🧴</h3><ul id="gelMixList" class="small"></ul></div>
-      <div class="card"><h3>Dosierung pro Trinkflasche 🧪</h3><ul id="recipeList" class="small"></ul></div>
+    <p class="gel-intro">Erst das Gel-Konzentrat anrühren, danach jede Trinkflasche einzeln dosieren und mit Wasser auffüllen.</p>
+    <div class="gel-cards">
+      <div class="card gel-card"><h3>1. Gel-Konzentrat anrühren 🧴</h3><ul id="gelMixList" class="small"></ul></div>
+      <div class="card gel-card"><h3>2. Trinkflaschen vorbereiten 🧪</h3><ul id="recipeList" class="small"></ul></div>
     </div>
   </section>
 
