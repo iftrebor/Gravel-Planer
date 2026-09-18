@@ -133,8 +133,7 @@ details>summary{cursor:pointer;font-weight:700}
     <button class="btn small" id="preset130">130 km</button>
     <button class="btn small" id="preset170">170 km</button>
     <button class="btn small" id="preset200">200 km</button>
-    <button class="btn small" id="printBtn">🖨️ Drucken</button>
-    <button class="btn primary small" id="exportPdf">📄 PDF</button>
+    <button class="btn primary small" id="shareBtn">↗️ Teilen</button>
     <button class="btn small theme-controls" id="themeToggle">🌗 Hell/Dunkel</button>
   </div>
 </div>
@@ -845,27 +844,58 @@ function buildChecklist(){
   }
 }
 
-async function exportPdf(){
-  if(!window.html2pdf){
-    try{
-      const s = document.createElement('script');
-      s.src = 'https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js';
-      document.body.appendChild(s);
-      await new Promise((res,rej)=>{ s.onload=res; s.onerror=rej; });
-    }catch(err){
-      alert('PDF‑Bibliothek konnte nicht geladen werden.');
-      window.print();
+function currentShareState(){
+  return {
+    distance: Number(getVal('distance')),
+    speed: Number(getVal('speed')),
+    days: Number(getVal('days')),
+    hotMode: Boolean(getVal('hotMode')),
+    mlPerHour: Number(getVal('mlPerHour')),
+    carbPerHour: Number(getVal('carbPerHour')),
+    saltPerHour: Number(getVal('saltPerHour')),
+    bottleMl: Number(getVal('bottleMl')),
+    ratio: getVal('ratio')
+  };
+}
+
+function restoreSharedState(){
+  const encoded = new URLSearchParams(window.location.search).get('share');
+  if(!encoded) return false;
+  try{
+    const shared = JSON.parse(encoded);
+    Object.entries(shared).forEach(([key,value]) => {
+      if(inputMap[key]) setVal(key, value);
+    });
+    return true;
+  }catch(error){
+    console.warn('Shared tour link could not be restored.', error);
+    return false;
+  }
+}
+
+async function sharePlan(){
+  compute();
+  if(!validateInputs()) return;
+  const state = currentShareState();
+  const url = new URL(window.location.href);
+  url.search = '';
+  url.searchParams.set('share', JSON.stringify(state));
+  const shareData = {
+    title: 'Gravel-Tour Ernährungs- und Trinkplan',
+    text: 'Meine Tourplanung – öffnen für die vollständige Ergebnisübersicht:',
+    url: url.toString()
+  };
+  try{
+    if(navigator.share){
+      await navigator.share(shareData);
       return;
     }
+    await navigator.clipboard.writeText(url.toString());
+    alert('Der Ergebnis-Link wurde in die Zwischenablage kopiert.');
+  }catch(error){
+    if(error.name === 'AbortError') return;
+    alert('Teilen war nicht möglich. Bitte den Link manuell kopieren.');
   }
-  compute();
-  await html2pdf().set({
-    margin:[8,8,8,8],
-    filename:'Gravel-Plan_v62.pdf',
-    image:{type:'jpeg',quality:0.95},
-    html2canvas:{scale:2,useCORS:true,background:'#ffffff'},
-    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
-  }).from(document.getElementById('exportArea')).save();
 }
 
 function bindInput(id){
@@ -891,8 +921,7 @@ document.getElementById('suggestBtn').addEventListener('click', applySuggestions
 document.getElementById('suggestBtn_m').addEventListener('click', applySuggestions);
 document.getElementById('resetBtn').addEventListener('click', resetInputs);
 document.getElementById('resetBtn_m').addEventListener('click', resetInputs);
-document.getElementById('exportPdf').addEventListener('click', exportPdf);
-document.getElementById('printBtn').addEventListener('click', ()=>{ compute(); window.print(); });
+document.getElementById('shareBtn').addEventListener('click', sharePlan);
 
 function preset(dist){ setVal('distance', dist); compute(); }
 document.getElementById('preset100').addEventListener('click', ()=>preset(100));
@@ -901,10 +930,11 @@ document.getElementById('preset170').addEventListener('click', ()=>preset(170));
 document.getElementById('preset200').addEventListener('click', ()=>preset(200));
 
 restoreTheme();
-restoreFormState();
+const hasSharedState = restoreSharedState();
+if(!hasSharedState) restoreFormState();
 updatePresetButtons();
 buildChecklist();
-const savedTab = localStorage.getItem('gravel_plan_v62_tab') || localStorage.getItem('gravel_plan_v61_tab');
+const savedTab = hasSharedState ? 'tab-summary' : (localStorage.getItem('gravel_plan_v62_tab') || localStorage.getItem('gravel_plan_v61_tab'));
 if(savedTab && document.getElementById(savedTab)) switchTab(savedTab);
 compute();
 window.addEventListener('resize', compute);
