@@ -409,8 +409,6 @@ details>summary{cursor:pointer;font-weight:700}
     <details open><summary>Sicherheit / Licht 🔦</summary><div class="checkgrid" id="c_safety" style="margin-top:10px"></div></details>
     <details open><summary>Navigation / Dokumente 🧭</summary><div class="checkgrid" id="c_nav" style="margin-top:10px"></div></details>
     <details open><summary>Kleidung / Wetter 🧥</summary><div class="checkgrid" id="c_clothes" style="margin-top:10px"></div></details>
-    <details><summary>Bikepacking – Aktivität 🚲</summary><div class="checkgrid" id="c_bike_active" style="margin-top:10px"></div></details>
-    <details><summary>Bikepacking – Abends 🌙</summary><div class="checkgrid" id="c_bike_evening" style="margin-top:10px"></div></details>
     <details open><summary>Hygiene 🧻</summary><div class="checkgrid" id="c_hygiene" style="margin-top:10px"></div></details>
     <details open><summary>Packlisten‑Logik</summary><ul id="packLogic" class="small"></ul></details>
   </section>
@@ -449,8 +447,6 @@ const toolData = {
   food:['Trinkflaschen mit Gel-Mischung','Gel-/Konzentratflasche zum Dosieren','Aroma / Sirup für das Gel','Reserve‑Riegel (~300 kcal)','Kleiner Müllbeutel'],
   nav:['Handy + Offline‑Karten','Powerbank + Kabel','EC‑Karte / Bargeld','Ausweis + Krankenkassenkarte'],
   clothes:['Regenjacke / Windweste','Armlinge / Beinlinge je nach Wetter','Radhandschuhe','Buff / Mütze','Sonnenbrille','Sonnencreme','Kettenschutz‑Wipe / Feuchttuch'],
-  bikeActive:['Radsocken (evtl. wasserdicht)','Unterziehshirt','Radtrikots','Bibshorts','Radschuhe + Überschuhe','Regenhose','Regenjacke','Windjacke','Handschuhe','Schlauchschal','Helm','Radbrille'],
-  bikeEvening:['Jogginghose','T‑Shirt','Fleecejacke','Buff','Mütze','Buxe','Socken','Schlappen'],
   hygiene:['Klopapier','Taschentücher']
 };
 const inputMap = {
@@ -815,7 +811,7 @@ function restoreFormState(){
 }
 
 function buildChecklist(){
-  const buckets = [['c_tools','tools'],['c_safety','safety'],['c_food','food'],['c_nav','nav'],['c_clothes','clothes'],['c_bike_active','bikeActive'],['c_bike_evening','bikeEvening'],['c_hygiene','hygiene']];
+  const buckets = [['c_tools','tools'],['c_safety','safety'],['c_food','food'],['c_nav','nav'],['c_clothes','clothes'],['c_hygiene','hygiene']];
   for(const [id,key] of buckets){
     const host = document.getElementById(id);
     host.innerHTML = '';
