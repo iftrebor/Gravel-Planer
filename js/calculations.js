@@ -1,6 +1,7 @@
 export const SODIUM_PER_GRAM_SALT = 393;
 export const SODIUM_PER_MG_SALT = 0.393;
 export const GEL_WATER_PER_CARB = 0.7;
+export const GEL_DENSITY_G_PER_ML = 1.3;
 
 export const LIMITS = Object.freeze({
   distance: [10, 1000],
@@ -64,14 +65,14 @@ export function calculateTour(rawInput = {}) {
   const gelWaterPerBottleMl = Math.round(carbPerBottle * GEL_WATER_PER_CARB);
   const totalSaltMg = totalSodium / SODIUM_PER_MG_SALT;
   const saltPerBottleMg = sodiumPerBottle / SODIUM_PER_MG_SALT;
-  const gelConcentrateMl = Math.round(gelWaterMl + totalCarbs + totalSaltMg / 1000);
-  const gelPerBottleMl = Math.round(gelWaterPerBottleMl + carbPerBottle + saltPerBottleMg / 1000);
+  const gelConcentrateMassG = Math.round((gelWaterMl + totalCarbs + totalSaltMg / 1000) * 10) / 10;
+  const gelPerBottleMassG = Math.round((gelWaterPerBottleMl + carbPerBottle + saltPerBottleMg / 1000) * 10) / 10;
   const mixedDrinkBottleCount = Math.ceil(totalDrinkMl / input.bottleMl);
   const initialGelBottleCount = Math.min(2, mixedDrinkBottleCount);
-  const squeezeGelMl = Math.max(0, gelConcentrateMl - initialGelBottleCount * gelPerBottleMl);
+  const squeezeGelMassG = Math.max(0, gelConcentrateMassG - initialGelBottleCount * gelPerBottleMassG);
   const squeezeCapacityMl = 500;
-  const gelPerSqueezeMl = Math.min(squeezeCapacityMl / 2, squeezeGelMl / 2);
-  const extraGelVesselMl = Math.max(0, squeezeGelMl - squeezeCapacityMl);
+  const gelPerSqueezeMl = Math.round(Math.min(squeezeCapacityMl / 2, squeezeGelMassG / GEL_DENSITY_G_PER_ML / 2) * 10) / 10;
+  const extraGelVesselMl = Math.max(0, squeezeGelMassG / GEL_DENSITY_G_PER_ML - squeezeCapacityMl);
 
   return {
     input,
@@ -93,9 +94,9 @@ export function calculateTour(rawInput = {}) {
     totalSodium,
     gelWaterMl,
     gelWaterPerBottleMl,
-    gelConcentrateMl,
-    gelPerBottleMl,
-    squeezeGelMl,
+    gelConcentrateMassG,
+    gelPerBottleMassG,
+    squeezeGelMassG,
     squeezeCapacityMl,
     gelPerSqueezeMl,
     extraGelVesselMl,

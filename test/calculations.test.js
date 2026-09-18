@@ -21,9 +21,9 @@ test('calculates a standard 130 km tour', () => {
   assert.equal(result.totalCarbs, 390);
   assert.equal(result.gelWaterMl, 273);
   assert.equal(result.gelWaterPerBottleMl, 61);
-  assert.equal(result.gelPerBottleMl, 127);
-  assert.equal(result.squeezeGelMl, 412);
-  assert.equal(result.gelPerSqueezeMl, 206);
+  assert.equal(result.gelPerBottleMassG, 135.5);
+  assert.equal(result.squeezeGelMassG, 395.2);
+  assert.equal(result.gelPerSqueezeMl, 152);
   assert.equal(result.extraGelVesselMl, 0);
   assert.equal(result.totalSodium, 1277);
   assert.equal(result.totalSalt, 3.25);

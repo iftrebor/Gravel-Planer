@@ -31,6 +31,8 @@ Die App rechnet mit Kochsalz: 1 g Salz entspricht ungefähr 393 mg Natrium. Als 
 
 Für das reine Gel-Konzentrat aus Maltodextrin, Fruktose, Salz und Wasser rechnet die App mit 0,7 g beziehungsweise ungefähr 0,7 ml Wasser pro Gramm Kohlenhydrate. Die Wassermenge ist ein praxisorientierter Startwert für die Konsistenz und kann je nach Pulver, Temperatur und gewünschter Dosierbarkeit angepasst werden.
 
+Die Dosierung pro 800-ml-Trinkflasche wird als Gramm ausgegeben. Für die Befüllung der beiden 250-ml-Squeeze-Flaschen verwendet die App als Näherung eine Gel-Dichte von 1,30 g/ml; die tatsächliche Dichte kann je nach Produkt und Zubereitung abweichen.
+
 ## Entwicklung
 
 Die Anwendung besteht aus statischen HTML-, CSS- und JavaScript-Dateien und benötigt derzeit keinen Build-Schritt. Änderungen können direkt im Browser getestet werden. Nach Änderungen am Service Worker sollte die Cache-Version in `sw.js` erhöht werden, damit bereits installierte PWAs die neue App-Shell erhalten.
