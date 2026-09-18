@@ -78,6 +78,8 @@ section h2{margin:0 0 var(--space-3);font-size:19px}
 .pill input{margin:0;width:18px;height:18px;min-height:auto}
 .cards{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:var(--space-2)}
 @media(max-width:740px){.cards{grid-template-columns:1fr}}
+.food-section + .food-section{margin-top:18px;padding-top:18px;border-top:1px solid var(--border)}
+.food-section>h3{margin:0 0 var(--space-2)}
 ul{margin:0;padding-left:18px}
 table{width:100%;border-collapse:collapse;overflow:hidden;border-radius:14px}
 th,td{border-bottom:1px solid var(--border);padding:8px;vertical-align:top}
@@ -366,13 +368,21 @@ details>summary{cursor:pointer;font-weight:700}
 
   <section class="panel" id="tab-food">
     <h2>Verpflegung</h2>
-    <div class="cards">
-      <div class="card"><h3>Ziele pro Stunde 🎯</h3><ul id="targets" class="small"></ul></div>
-      <div class="card"><h3>Gesamtbedarf (Tour) 📊</h3><ul id="totals" class="small"></ul></div>
-      <div class="card"><h3>Mitnehmen & Transport 🎒</h3><ul id="carry" class="small"></ul></div>
+    <div class="food-section">
+      <h3>Vorbereitung</h3>
+      <div class="cards">
+        <div class="card"><h4>Gesamtbedarf (Tour) 📊</h4><ul id="totals" class="small"></ul></div>
+        <div class="card"><h4>Mitnehmen & Transport 🎒</h4><ul id="carry" class="small"></ul></div>
+      </div>
     </div>
-    <details open><summary>Snack‑Strategie pro Stunde 🍌</summary><ul id="snackStrategy" class="small"></ul></details>
-    <details open><summary>Nachfüllstrategie 💧</summary><ul id="refillStrategy" class="small"></ul></details>
+    <div class="food-section">
+      <h3>Verpflegungs-Strategie</h3>
+      <div class="cards">
+        <div class="card"><h4>Ziele pro Stunde 🎯</h4><ul id="targets" class="small"></ul></div>
+      </div>
+      <details open><summary>Snack‑Strategie pro Stunde 🍌</summary><ul id="snackStrategy" class="small"></ul></details>
+      <details open><summary>Nachfüllstrategie 💧</summary><ul id="refillStrategy" class="small"></ul></details>
+    </div>
   </section>
 
   <section class="panel" id="tab-checklist">
