@@ -53,7 +53,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .btn.small{padding:10px 12px;min-height:42px;font-size:14px}
 .btn.preset-active{background:linear-gradient(180deg,var(--accent),#1b944f);color:#08210f;border-color:#177d43}
 .btn-help{display:block;font-weight:500;margin-top:4px;line-height:1.25}
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:rgba(11,15,20,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border);padding-bottom:var(--safe-bottom);transform:translate3d(0,0,0);-webkit-transform:translate3d(0,0,0);will-change:transform}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:rgba(11,15,20,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border);padding-bottom:var(--safe-bottom);transform:translate3d(0,0,0);-webkit-transform:translate3d(0,0,0);will-change:transform;overflow-anchor:none}
 :root.light .tabs{background:rgba(245,247,251,.96)}
 .tabbtn{border:none;border-right:1px solid var(--border);background:transparent;padding:12px 3px 14px;font-weight:700;min-height:62px;font-size:12px;line-height:1.15;white-space:normal;word-break:normal;overflow-wrap:normal;hyphens:auto}
 .tabbtn:last-child{border-right:none}
@@ -470,6 +470,7 @@ function switchTab(tabId){
     b.classList.toggle('active', active);
     b.setAttribute('aria-selected', String(active));
   });
+  if(document.activeElement instanceof HTMLElement) document.activeElement.blur();
   localStorage.setItem('gravel_plan_v62_tab', tabId);
 }
 document.querySelectorAll('.tabbtn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
