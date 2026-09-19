@@ -746,8 +746,7 @@ function compute(){
   const speedForDrink = Math.max(1, Number(state.speed) || 1);
   const drinkPer25Km = mlPerHour * (25 / speedForDrink);
   document.getElementById('targets').innerHTML = [
-    '<b>Trinken:</b> ' + formatLiters(mlPerHour) + '/h bzw. ' + formatLiters(drinkPer25Km) + '/25 km (bei ' + state.speed + ' km/h)',
-    '<b>KH:</b> ' + carbPerHour + ' g/h'
+    '<b>Trinken:</b> ' + formatLiters(mlPerHour) + '/h bzw. ' + formatLiters(drinkPer25Km) + '/25 km (bei ' + state.speed + ' km/h)'
   ].map(x => '<li>'+x+'</li>').join('');
 
   const snickers = Math.max(1, Math.ceil(duration * 0.33));
