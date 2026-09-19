@@ -744,11 +744,11 @@ function compute(){
     'Für die Tour reichen damit ca. ' + Math.max(1, Math.ceil(totalMl / bottleMl)) + ' gemischte Trinkflaschen'
   ].map(x => '<li>'+x+'</li>').join('');
 
+  const speedForDrink = Math.max(1, Number(state.speed) || 1);
+  const drinkPer25Km = mlPerHour * (25 / speedForDrink);
   document.getElementById('targets').innerHTML = [
-    '<b>Trinken:</b> ' + formatLiters(mlPerHour) + '/h gemischter Drink',
-    '<b>Salz:</b> ' + saltPerHour + ' mg/h <span class="muted">(≈ ' + Math.round(calculation.naPerHour) + ' mg Natrium/h)</span> · <b>KH:</b> ' + carbPerHour + ' g/h',
-    state.hotMode ? 'Hitze-Modus: mindestens 0,8 l/h und 850 mg Salz/h.' : 'Hitze-Modus aus',
-    'Flaschen: 2× Gel-Mischung'
+    '<b>Trinken:</b> ' + formatLiters(mlPerHour) + '/h bzw. ' + formatLiters(drinkPer25Km) + '/25 km (bei ' + state.speed + ' km/h)',
+    '<b>Salz:</b> ' + saltPerHour + ' mg/h <span class="muted">(≈ ' + Math.round(calculation.naPerHour) + ' mg Natrium/h)</span> · <b>KH:</b> ' + carbPerHour + ' g/h'
   ].map(x => '<li>'+x+'</li>').join('');
 
   const snickers = Math.max(1, Math.ceil(duration * 0.33));
