@@ -754,9 +754,9 @@ function compute(){
 
   document.getElementById('carry').innerHTML = [
     'Am Rad: 2× Trinkflasche mit Gel-Mischung',
+    '2× Squeeze-Flaschen mit Rest-Gel',
     snickers + '× Snickers (geteilt essen)',
-    bananas + '× Banane',
-    'Aroma / Sirup für das Gel'
+    bananas + '× Banane'
   ].map(x => '<li>'+x+'</li>').join('');
 
   document.getElementById('snackStrategy').innerHTML = buildSnackStrategy(Math.max(1, Math.ceil(duration)), snickers, bananas).map(x => '<li>'+x+'</li>').join('');
