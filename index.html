@@ -85,7 +85,6 @@ section h2{margin:0 0 var(--space-3);font-size:19px}
 @media(max-width:740px){.cards{grid-template-columns:1fr}}
 .food-section + .food-section{margin-top:18px;padding-top:18px;border-top:1px solid var(--border)}
 .food-section>h3{margin:0 0 var(--space-2)}
-.gel-intro{margin:0 0 var(--space-2);color:var(--muted)}
 .gel-cards{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:var(--space-2)}
 .gel-card h3{margin:0 0 var(--space-2)}
 .gel-card h4{margin:16px 0 8px;font-size:14px}
@@ -376,7 +375,6 @@ details>summary{cursor:pointer;font-weight:700}
 
   <section class="panel" id="tab-gel">
     <h2>Gel vorbereiten</h2>
-    <p class="gel-intro">Erst das Gel-Konzentrat anrühren, danach jede Trinkflasche einzeln dosieren und mit Wasser auffüllen.</p>
     <div class="gel-cards">
       <div class="card gel-card">
         <h3>Gel vorbereiten 🧴</h3>
@@ -737,17 +735,13 @@ function compute(){
   ].map(x => '<li>'+x+'</li>').join('');
 
   document.getElementById('gelFillList').innerHTML = [
-    'Das Konzentrat auf die zwei ' + bottleMl + '-ml-Flaschen und die zwei Squeeze-Flaschen verteilen',
+    calculation.gelPerBottleMassG.toFixed(1) + ' g Gel-Konzentrat je ' + bottleMl + '-ml-Trinkflasche',
+    'Dann mit Wasser bis ' + bottleMl + ' ml auffüllen',
     calculation.gelPerSqueezeMassG.toFixed(1) + ' g Gel je Squeeze-Flasche (2 × 250 ml gleichmäßig befüllen)',
     calculation.extraGelVesselMassG > 0
       ? calculation.extraGelVesselMassG.toFixed(1) + ' g bleiben übrig: in ein weiteres Gefäß füllen'
       : 'Die zwei 250-ml-Squeeze-Flaschen reichen für das Rest-Konzentrat',
     'Für die Tour reichen damit ca. ' + Math.max(1, Math.ceil(totalMl / bottleMl)) + ' gemischte Trinkflaschen'
-  ].map(x => '<li>'+x+'</li>').join('');
-
-  document.getElementById('gelFillList').innerHTML += [
-    calculation.gelPerBottleMassG.toFixed(1) + ' g Gel-Konzentrat je ' + bottleMl + '-ml-Trinkflasche',
-    'Dann mit Wasser bis ' + bottleMl + ' ml auffüllen'
   ].map(x => '<li>'+x+'</li>').join('');
 
   document.getElementById('targets').innerHTML = [
